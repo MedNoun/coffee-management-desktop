@@ -1,7 +1,25 @@
 <div class="container">
   <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
+    {{ "PAGES.HOME.TITLE" | translate }}
   </h1>
+  <button mat-raised-button (click)="createUser()">Click it</button>
 
-  <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a>
+  <button
+    (click)="readUsers()"
+    #error
+    [swal]="{
+      title: 'Mot De Passe Incorrect!',
+      text: 'Vérifier le mot de passe du User',
+      icon: 'error',
+      position: 'top'
+    }"
+  >
+    swal tester
+  </button>
+
+  <a routerLink="/detail">{{ "PAGES.HOME.GO_TO_DETAIL" | translate }}</a>
+
+  <igx-date-picker item-width="50%" [value]="date" [formatter]="formatter">
+    <label igxLabel>Date</label>
+  </igx-date-picker>
 </div>
