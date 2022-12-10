@@ -19,7 +19,7 @@ export class User {
   @Column({ enum: Role, default: Role.server })
   role: Role;
   @Column()
-  salt: String;
+  salt: string;
   @Column({ unique: true })
   email: string;
   @Column()

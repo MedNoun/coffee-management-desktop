@@ -3,7 +3,7 @@ import { Product } from './product';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
-  categoryId: Number;
+  categoryId: number;
   @Column()
   categoryName: string;
   @Column()

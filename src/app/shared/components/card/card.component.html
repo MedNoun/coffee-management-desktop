@@ -1,0 +1,43 @@
+<div *ngIf="!context" class="cancel" (click)="delete()">
+  <mat-icon class="pointer">cancel</mat-icon>
+</div>
+<igx-card class="pointer" (click)="handleClick()">
+  <igx-card-media class="pointer" height="105px">
+    <input
+      style="display: none"
+      type="file"
+      (change)="onFileChanged($event, category.categoryId)"
+      #fileInput
+    />
+
+    <img class="pointer" [src]="category.categoryImage" />
+  </igx-card-media>
+  <button
+    *ngIf="!context"
+    class="photo"
+    mat-raised-button
+    (click)="fileInput.click()"
+  >
+    <p class="pointer">Select File</p>
+  </button>
+  <igx-card-header class="pointer">
+    <input
+      igxCardHeaderTitle
+      class="pointer editable"
+      [class]="context ? '' : 'cursor'"
+      [id]="category.categoryId"
+      [(ngModel)]="category.categoryName"
+      [value]="category.categoryName"
+      [readonly]="context"
+    />
+  </igx-card-header>
+</igx-card>
+
+<!-- <div
+  *ngIf="!context"
+  class="container sample-column card-wrapper flex center but"
+>
+  <button mat-fab class="pointer" (click)="add()">
+    <mat-icon class="pointer">add</mat-icon>
+  </button>
+</div> -->

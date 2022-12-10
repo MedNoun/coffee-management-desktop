@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../../assets';
 import { UserService } from '../core/services/user/user.service';
 
 @Component({
@@ -31,11 +30,9 @@ export class HomeComponent implements OnInit {
       email: 'farah@gmail.com',
     };
     const users = await this.userService.delete({ username: 'Med3oun' });
-    console.log(users);
   }
   async readUsers() {
     const users = await this.userService.readAll();
-    console.log(users);
   }
 
   ngOnInit(): void {

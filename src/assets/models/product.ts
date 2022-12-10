@@ -4,11 +4,11 @@ import { Category } from './category';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
-  productId: Number;
+  productId: number;
   @Column()
-  productName: String;
+  productName: string;
   @Column()
-  productImage: String;
+  productImage: string;
   @Column()
   productPrice: number;
   @Column()
