@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as url from 'url';
 
 import { DataSource, Repository } from 'typeorm';
-import { Category, Product, User } from '../src/assets/';
+import { Bill, Category, Product, Purchase, User } from '../src/assets/';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1);
@@ -17,7 +17,7 @@ const db_path = path.join(
   'databases',
   'Database.sqlite'
 );
-const entities = [User, Category, Product];
+const entities = [User, Category, Product, Bill, Purchase];
 const repositories = new Map<string, Repository<any>>();
 const db: DataSource = db_init(db_path);
 
@@ -34,7 +34,6 @@ function db_init(db_path): DataSource {
     entities: entities,
   });
   // init repositories :
-  console.log('hihihih hahahahahah');
   for (let entity of entities) {
     console.log('creating repositories');
     repositories.set(entity.name, db.getRepository(entity));

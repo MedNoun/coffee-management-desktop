@@ -1,0 +1,30 @@
+.card-wrapper {
+  max-width: 220px;
+  min-width: 220px;
+}
+.icon {
+  cursor: pointer !important;
+}
+.editable.title {
+  text-align: left;
+  width: 120px;
+  font-size: large;
+  font-weight: 900;
+}
+.cursor {
+  cursor: auto;
+}
+.but {
+  width: 150px;
+}
+.sub.editable {
+  resize: none;
+  width: 100%;
+  text-align: left;
+}
+.price {
+  font-size: medium;
+  text-align: right;
+  margin-right: 5px;
+  width: 40px;
+}

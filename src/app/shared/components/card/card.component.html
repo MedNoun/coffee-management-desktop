@@ -1,7 +1,7 @@
-<div *ngIf="!context" class="cancel" (click)="delete()">
+<div *ngIf="admin" class="cancel" (click)="delete()">
   <mat-icon class="pointer">cancel</mat-icon>
 </div>
-<igx-card class="pointer" (click)="handleClick()">
+<igx-card class="pointer card" (click)="handleClick()">
   <igx-card-media class="pointer" height="105px">
     <input
       style="display: none"
@@ -9,11 +9,10 @@
       (change)="onFileChanged($event, category.categoryId)"
       #fileInput
     />
-
     <img class="pointer" [src]="category.categoryImage" />
   </igx-card-media>
   <button
-    *ngIf="!context"
+    *ngIf="admin"
     class="photo"
     mat-raised-button
     (click)="fileInput.click()"
@@ -21,15 +20,15 @@
     <p class="pointer">Select File</p>
   </button>
   <igx-card-header class="pointer">
-    <input
+    <textarea
       igxCardHeaderTitle
       class="pointer editable"
-      [class]="context ? '' : 'cursor'"
+      [class]="!admin ? '' : 'cursor'"
       [id]="category.categoryId"
       [(ngModel)]="category.categoryName"
       [value]="category.categoryName"
-      [readonly]="context"
-    />
+      [readonly]="!admin"
+    ></textarea>
   </igx-card-header>
 </igx-card>
 

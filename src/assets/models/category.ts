@@ -3,11 +3,11 @@ import { Product } from './product';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
-  categoryId: number;
+  categoryId: number = 0;
   @Column()
-  categoryName: string;
+  categoryName: string = 'Category Name';
   @Column()
-  categoryImage: string;
+  categoryImage: string = '../../../../assets/background.jpg';
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
 }

@@ -41,6 +41,12 @@ import { MatRadioModule } from '@angular/material/radio';
     MatInputModule,
     MatRadioModule,
   ],
-  exports: [TranslateModule, WebviewDirective, FormsModule, CardComponent],
+  exports: [
+    TranslateModule,
+    WebviewDirective,
+    FormsModule,
+    CardComponent,
+    SubCardComponent,
+  ],
 })
 export class SharedModule {}

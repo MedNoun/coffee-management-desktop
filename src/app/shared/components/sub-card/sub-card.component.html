@@ -1,1 +1,56 @@
-<p>sub-card works!</p>
+<div class="sample-column card-wrapper container">
+  <div *ngIf="admin" class="cancel">
+    <mat-icon class="pointer">cancel</mat-icon>
+  </div>
+  <igx-card>
+    <igx-card-media height="100px">
+      <img [src]="product.productImage" />
+    </igx-card-media>
+
+    <igx-card-header>
+      <div *ngIf="!admin">
+        <h3 igxCardHeaderTitle>{{ product.productName }}</h3>
+        <h5 igxCardHeaderSubtitle>{{ product.description }}</h5>
+      </div>
+      <div *ngIf="admin">
+        <input
+          igxCardHeaderTitle
+          class="pointer editable title cursor"
+          [id]="product.productId"
+          [(ngModel)]="product.productName"
+          [value]="product.productName"
+        />
+        <textarea
+          igxCardHeaderSubTitle
+          class="pointer sub editable cursor"
+          [id]="product.productId"
+          [(ngModel)]="product.description"
+          [value]="product.description"
+        ></textarea>
+      </div>
+    </igx-card-header>
+    <div class="container flex space-between center">
+      <igx-card-content>
+        <div *ngIf="admin">
+          <input
+            igxCardHeaderTitle
+            class="pointer editable price cursor"
+            [id]="product.productId"
+            [(ngModel)]="product.productPrice"
+            [value]="product.productPrice"
+          />
+          <span>DT</span>
+        </div>
+        <p *ngIf="!admin">{{ product.productPrice }} DT</p>
+      </igx-card-content>
+      <div class="container flex">
+        <div class="modifie">
+          <mat-icon class="icon" (click)="add()">add_box</mat-icon>
+        </div>
+        <div class="modifie">
+          <mat-icon class="icon" (click)="remove()">remove_box</mat-icon>
+        </div>
+      </div>
+    </div>
+  </igx-card>
+</div>

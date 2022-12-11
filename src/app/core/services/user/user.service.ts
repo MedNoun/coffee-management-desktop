@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Role, User } from '../../../../assets';
+import { User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private admin: boolean = true;
+  private _admin: boolean;
   private mainSubject: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private readonly storeService: StoreService) {}
+  constructor(private readonly storeService: StoreService) {
+    this.admin = false;
+  }
 
   //Crud Operations for User
   public async readAll() {
@@ -40,11 +42,14 @@ export class UserService {
   }
 
   //getters
-  get context() {
-    return this.admin;
+  get admin() {
+    return this._admin;
   }
-
-  //observables
+  private set admin(v: boolean) {
+    this._admin = v;
+    this.next(v);
+  }
+  //observables methods
   get observable() {
     return this.mainSubject.asObservable();
   }

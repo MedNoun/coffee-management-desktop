@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Category, Product } from '../../../../assets';
+import { Category } from '../../../../assets';
 import { ProductService } from '../../../core/services';
 import { UserService } from '../../../core/services/user/user.service';
 
@@ -9,26 +9,22 @@ import { UserService } from '../../../core/services/user/user.service';
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
-  private _context: boolean;
-  @Input('category') private _category: Category = {
-    categoryId: 0,
-    categoryImage: '../../../../assets/background.jpg',
-    categoryName: 'Milk',
-    products: [],
-  };
+  private _admin: boolean;
+  @Input('category') private _category: Category = new Category();
   constructor(
     private readonly productService: ProductService,
     private readonly userService: UserService
   ) {
-    this._context = this.userService.context;
+    this._admin = this.userService.admin;
   }
   ngOnInit(): void {
-    // get the context of the admin
+    // get the user context
     this.userService.observable.subscribe((v: boolean) => {
-      this._context = v;
+      this._admin = v;
     });
   }
   delete() {
+    console.log('deleting');
     this.productService.removeCategory(this.category.categoryId);
   }
   handleClick() {
@@ -40,8 +36,8 @@ export class CardComponent implements OnInit {
   callSubProducts(name: string) {}
 
   // getters :
-  get context() {
-    return this._context;
+  get admin() {
+    return this._admin;
   }
   get category() {
     return this._category;
