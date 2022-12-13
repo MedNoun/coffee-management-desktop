@@ -2,10 +2,11 @@
   <h1 class="title">
     {{ "PAGES.HOME.TITLE" | translate }}
   </h1>
-  <button mat-raised-button (click)="createUser()">Click it</button>
+  <button mat-raised-button (click)="addCategory()">Add</button>
+
+  <button mat-raised-button (click)="deleteCategory()">Delete</button>
 
   <button
-    (click)="readUsers()"
     #error
     [swal]="{
       title: 'Mot De Passe Incorrect!',
@@ -18,10 +19,15 @@
   </button>
 
   <a routerLink="/detail">{{ "PAGES.HOME.GO_TO_DETAIL" | translate }}</a>
-  <app-card></app-card>
-  <app-sub-card></app-sub-card>
 
-  <igx-date-picker item-width="50%" [value]="date" [formatter]="formatter">
-    <label igxLabel>Date</label>
-  </igx-date-picker>
+  <app-card
+    *ngFor="let category of categories"
+    [category]="category"
+  ></app-card>
+  <div *ngIf="category">
+    <app-sub-card
+      *ngFor="let product of category.products"
+      [product]="product"
+    ></app-sub-card>
+  </div>
 </div>

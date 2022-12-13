@@ -5,19 +5,22 @@ import { Injectable } from '@angular/core';
 })
 export class StoreService {
   //CRUD Operations
-  public async create(name: string, object) {
-    return await window.api.invoke('create', name, object);
+  public async create(name: string, object, params: any = {}) {
+    return await window.api.invoke('create', name, object, params);
   }
-  public async readOne(name: string, object) {
-    return await window.api.invoke('read:one', name, object);
+  public async save(name: string, object, params: any = {}) {
+    return await window.api.invoke('save', name, object, params);
   }
-  public async readAll(name: string) {
-    return await window.api.invoke('read:all', name);
+  public async findOneBy(name: string, object, params: any = {}) {
+    return await window.api.invoke('find:one:by', name, object, params);
   }
-  public async update(id: number, name: string, object) {
-    return await window.api.invoke('update', name, id, object);
+  public async find(name: string, params: any = {}) {
+    return await window.api.invoke('find', name, params);
   }
-  public async delete(name: string, object) {
-    return await window.api.invoke('delete', name, object);
+  public async update(id: number, name: string, object, params: any = {}) {
+    return await window.api.invoke('update', name, id, object, params);
+  }
+  public async remove(name: string, object, params: any = {}) {
+    return await window.api.invoke('remove', name, object, params);
   }
 }

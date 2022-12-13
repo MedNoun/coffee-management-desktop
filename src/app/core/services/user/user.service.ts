@@ -16,13 +16,13 @@ export class UserService {
 
   //Crud Operations for User
   public async readAll() {
-    return await this.storeService.readAll(User.name);
+    return await this.storeService.find(User.name);
   }
   public async readOne(
     user: Partial<User> &
       (Pick<User, 'email'> | Pick<User, 'username'> | Pick<User, 'userId'>)
   ) {
-    return await this.storeService.readOne(User.name, user);
+    return await this.storeService.findOneBy(User.name, user);
   }
   public async create(
     user: Partial<User> &
@@ -38,7 +38,7 @@ export class UserService {
     user: Partial<User> &
       (Pick<User, 'email'> | Pick<User, 'username'> | Pick<User, 'userId'>)
   ) {
-    return await this.storeService.delete(User.name, user);
+    return await this.storeService.remove(User.name, user);
   }
 
   //getters

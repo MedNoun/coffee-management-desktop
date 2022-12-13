@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Category } from '../../assets';
+import { ProductService } from '../core/services';
 import { UserService } from '../core/services/user/user.service';
+import { CategoryDto, ProductDto } from '../shared/models';
 
 @Component({
   selector: 'app-home',
@@ -8,34 +11,39 @@ import { UserService } from '../core/services/user/user.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public date: Date = new Date(Date.now());
-  private dayFormatter = new Intl.DateTimeFormat('en', { weekday: 'long' });
-  private monthFormatter = new Intl.DateTimeFormat('en', { month: 'long' });
+  private _categories: Category[];
+  private _category: Category;
+
   constructor(
     private router: Router,
-    private readonly userService: UserService
-  ) {}
-  public formatter = (_: Date) => {
-    return `You selected ${this.dayFormatter.format(
-      _
-    )}, ${_.getDate()} ${this.monthFormatter.format(_)}, ${_.getFullYear()}`;
-  };
-
-  async createUser() {
-    const expl = {
-      firstName: 'Farah',
-      lastName: 'Kallel',
-      password: 'azerty123',
-      username: 'Farah123',
-      email: 'farah@gmail.com',
-    };
-    const users = await this.userService.delete({ username: 'Med3oun' });
+    private readonly userService: UserService,
+    private readonly productService: ProductService
+  ) {
+    this._categories = this.productService.categories;
+    this._category = this.productService.category;
   }
-  async readUsers() {
-    const users = await this.userService.readAll();
-  }
-
   ngOnInit(): void {
-    console.log('HomeComponent INIT');
+    this.productService.observable.subscribe((v) => {
+      this._categories = v;
+      this._category = this.productService.category;
+    });
+  }
+
+  async addCategory() {
+    const category = new CategoryDto();
+    category.products.push(new ProductDto());
+    category.products.push(new ProductDto());
+    this.productService.create(category);
+  }
+  async deleteCategory() {
+    this.productService.delete(this.categories[0]);
+  }
+
+  // getters setters
+  get categories() {
+    return this._categories;
+  }
+  get category() {
+    return this._category;
   }
 }

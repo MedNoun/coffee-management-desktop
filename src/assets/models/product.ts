@@ -4,17 +4,19 @@ import { Category } from './category';
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
-  productId: number = 0;
+  productId: number;
   @Column()
-  productName: string = 'Product';
+  productName: string;
   @Column()
-  description: string = 'haja bnina barcha';
+  description: string;
   @Column()
-  productImage: string = '../../../../assets/background.jpg';
+  productImage: string;
   @Column()
-  productPrice: number = 5;
+  productPrice: number;
   @Column()
-  devise: string = 'Dolar';
+  devise: string;
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
+  @Column({ default: false })
+  synced: boolean;
 }

@@ -134,23 +134,26 @@ try {
   // throw e;
 }
 
-ipcMain.handle('create', async (event, name, object) => {
+ipcMain.handle('save', async (event, name, object, params) => {
   return await repositories.get(name).save(object);
 });
 
-ipcMain.handle('read:one', async (event, name, object) => {
-  console.log(object);
+ipcMain.handle('create', async (event, name, object, params) => {
+  return await repositories.get(name).create(object);
+});
+
+ipcMain.handle('find:one:by', async (event, name, object, params) => {
   return await repositories.get(name).findOneBy(object);
 });
 
-ipcMain.handle('read:all', async (event, name, params) => {
-  return await repositories.get(name).find();
+ipcMain.handle('find', async (event, name, params) => {
+  return await repositories.get(name).find(params);
 });
 
-ipcMain.handle('update', async (event, name, id, object) => {
+ipcMain.handle('update', async (event, name, id, object, params) => {
   return await repositories.get(name).update(id, object);
 });
 
-ipcMain.handle('delete', async (event, name, object) => {
-  return await repositories.get(name).delete(object);
+ipcMain.handle('remove', async (event, name, object, params) => {
+  return await repositories.get(name).remove(object);
 });

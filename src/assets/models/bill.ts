@@ -29,12 +29,14 @@ export class Purchase {
   product: Product;
   @Column()
   quantity: number;
+  @Column()
+  timestamp: Date = new Date();
 }
 
 @Entity()
 export class Bill {
   @PrimaryGeneratedColumn()
-  id: number = 0;
+  id: number;
   @ManyToOne(() => User, {
     nullable: false,
     onUpdate: 'CASCADE',
@@ -45,4 +47,7 @@ export class Bill {
   user: User;
   @OneToMany(() => Purchase, (purchase) => purchase.bill)
   purchases: Purchase[];
+
+  @Column({ default: false })
+  synced: boolean;
 }

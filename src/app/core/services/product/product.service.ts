@@ -2,69 +2,124 @@ import { Injectable, OnInit } from '@angular/core';
 import { dropWhile, find } from 'lodash';
 import { Subject } from 'rxjs';
 import { Category, Product, Role } from '../../../../assets';
+import { CategoryDto, ProductDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService implements OnInit {
-  private currentCategory: number;
+  private _category: number;
   private _categories: Category[];
-  private mainSubject: Subject<Category> = new Subject<Category>();
+  private mainSubject: Subject<Category[]> = new Subject<Category[]>();
 
   constructor(private readonly storeService: StoreService) {
-    this.readAll();
+    this.find();
   }
   ngOnInit(): void {}
 
   //database Logic
-  private async readAll() {
-    this._categories = await this.storeService.readAll(Category.name);
-    this.currentCategory = 0;
+  private async find() {
+    this._categories = await this.storeService.find(Category.name, {
+      relations: {
+        products: true,
+      },
+    });
+    try {
+      this.currentCategory = this._categories[0].categoryId;
+    } catch (e) {
+      this.currentCategory = -1;
+    }
+    this.next();
   }
   public async create(
-    category: Partial<Category> & Pick<Category, 'categoryName' | 'products'>
+    category: Partial<CategoryDto> &
+      Pick<CategoryDto, 'categoryName' | 'products'>
   ) {
-    return await this.storeService.create(Category.name, category);
+    const products: Product[] = await Promise.all(
+      category.products.map((v) => {
+        return this.preloadProduct(v);
+      })
+    );
+
+    const _category: Category = await this.storeService.create(Category.name, {
+      ...category,
+      products,
+    });
+    this.storeService.save(Category.name, _category).then((category) => {
+      this.addCategory(category);
+    });
   }
   public async update(id: number, category: Partial<Category>) {
     return await this.storeService.update(id, Category.name, category);
   }
-  public async delete(
-    category: Partial<Category> & Pick<Category, 'categoryId'>
-  ) {
-    return await this.storeService.delete(Category.name, category);
+  public async delete(category: Category) {
+    this.storeService.remove(Category.name, category).then((v) => {
+      this.removeCategory(category.categoryId);
+    });
+  }
+  // helper db functions
+  private async preloadProduct(product: Partial<ProductDto>) {
+    const _product: Product = await this.storeService.findOneBy(
+      Product.name,
+      product
+    );
+    return _product
+      ? _product
+      : // check why the create does not work IMPORTANT //TODO
+        await this.storeService.save(Product.name, product);
   }
 
   //Category Logic
+  get categories() {
+    return this._categories;
+  }
   get category() {
     return find(this._categories, { categoryId: this.currentCategory });
   }
-  removeCategory(id: number) {
-    this._categories = dropWhile(this._categories, { categoryId: id });
+  set currentCategory(id: number) {
+    this._category = id;
+    this.next();
   }
-  addCategory(category: Category) {
+  get currentCategory() {
+    return this._category;
+  }
+  public removeCategory(id: number) {
+    this._categories = dropWhile(this._categories, { categoryId: id });
+    if (id === this.currentCategory) {
+      try {
+        this.currentCategory = this._categories[0].categoryId;
+      } catch (e) {
+        this.currentCategory = -1;
+      }
+    }
+    this.next();
+  }
+  public addCategory(category: Category) {
     this._categories.push(category);
+    this.next();
   }
 
   //Product logic
   get products(): Product[] {
     return this.category.products;
   }
-  addProduct(product: Product) {
+  public addProduct(product: Product) {
     this.category.products.push(product);
+    this.next();
   }
-  removeProduct(id: number) {
+  public removeProduct(id: number) {
     this.category.products = dropWhile(this.category.products, {
       productId: id,
     });
+    this.next();
   }
 
   //observables
   get observable() {
     return this.mainSubject.asObservable();
   }
-  next(category: Category) {
-    this.mainSubject.next(category);
+  private next() {
+    this.mainSubject.next(this._categories);
   }
 }

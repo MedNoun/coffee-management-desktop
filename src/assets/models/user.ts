@@ -9,19 +9,21 @@ export enum Role {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  userId: number = 0;
+  userId: number;
   @Column({ unique: true })
-  username: string = 'MedNoun';
+  username: string;
   @Column()
-  firstName: string = 'Mohamed';
+  firstName: string;
   @Column()
-  lastName: string = 'Sahnoun';
+  lastName: string;
   @Column({ enum: Role, default: Role.server })
-  role: Role = Role.admin;
+  role: Role;
   @Column()
-  salt: string = '123';
+  salt: string;
   @Column({ unique: true })
-  email: string = 'mouhasahss@gmail.com';
+  email: string;
   @Column()
-  password: string = 'aezrty123';
+  password: string;
+  @Column({ default: false })
+  synced: boolean;
 }

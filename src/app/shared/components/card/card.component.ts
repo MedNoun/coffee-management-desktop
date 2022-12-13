@@ -18,17 +18,16 @@ export class CardComponent implements OnInit {
     this._admin = this.userService.admin;
   }
   ngOnInit(): void {
-    // get the user context
+    // get the user context on change
     this.userService.observable.subscribe((v: boolean) => {
       this._admin = v;
     });
   }
   delete() {
-    console.log('deleting');
     this.productService.removeCategory(this.category.categoryId);
   }
   handleClick() {
-    this.productService.next(this.category);
+    this.productService.currentCategory = this.category.categoryId;
   }
 
   onFileChanged(event, id) {}
