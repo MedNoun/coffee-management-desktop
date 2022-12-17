@@ -1,15 +1,24 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { BaseEntity } from './baseEntity';
 import { Product } from './product';
 @Entity()
-export class Category {
+export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
-  categoryId: number;
+  id: number;
   @Column()
-  categoryName: string;
+  name: string;
   @Column()
-  categoryImage: string;
-  @OneToMany(() => Product, (product) => product.category)
+  image: string;
+  @OneToMany(() => Product, (product) => product.category, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    createForeignKeyConstraints: false,
+  })
   products: Product[];
-  @Column({ default: false })
-  synced: boolean;
 }

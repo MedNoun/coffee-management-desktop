@@ -1,29 +1,29 @@
 <div class="sample-column card-wrapper container">
   <div *ngIf="admin" class="cancel">
-    <mat-icon class="pointer">cancel</mat-icon>
+    <mat-icon class="pointer" (click)="delete()">cancel</mat-icon>
   </div>
   <igx-card>
     <igx-card-media height="100px">
-      <img [src]="product.productImage" />
+      <img [src]="product.image" />
     </igx-card-media>
 
     <igx-card-header>
       <div *ngIf="!admin">
-        <h3 igxCardHeaderTitle>{{ product.productName }}</h3>
+        <h3 igxCardHeaderTitle>{{ product.name }}</h3>
         <h5 igxCardHeaderSubtitle>{{ product.description }}</h5>
       </div>
       <div *ngIf="admin">
         <input
           igxCardHeaderTitle
           class="pointer editable title cursor"
-          [id]="product.productId"
-          [(ngModel)]="product.productName"
-          [value]="product.productName"
+          [id]="product.id"
+          [(ngModel)]="product.name"
+          [value]="product.name"
         />
         <textarea
           igxCardHeaderSubTitle
           class="pointer sub editable cursor"
-          [id]="product.productId"
+          [id]="product.id"
           [(ngModel)]="product.description"
           [value]="product.description"
         ></textarea>
@@ -35,13 +35,13 @@
           <input
             igxCardHeaderTitle
             class="pointer editable price cursor"
-            [id]="product.productId"
-            [(ngModel)]="product.productPrice"
-            [value]="product.productPrice"
+            [id]="product.id"
+            [(ngModel)]="product.price"
+            [value]="product.price"
           />
           <span>DT</span>
         </div>
-        <p *ngIf="!admin">{{ product.productPrice }} DT</p>
+        <p *ngIf="!admin">{{ product.price }} {{ product.unit }}</p>
       </igx-card-content>
       <div class="container flex">
         <div class="modifie">

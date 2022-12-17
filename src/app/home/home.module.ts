@@ -8,13 +8,15 @@ import { SharedModule } from '../shared/shared.module';
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
 import { IgxDatePickerModule } from 'igniteui-angular';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BillComponent } from './components/bill/bill.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, BillComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -24,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     IgxDatePickerModule,
     BrowserAnimationsModule,
+    MatIconModule,
   ],
 })
 export class HomeModule {}

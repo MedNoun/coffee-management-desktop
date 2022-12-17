@@ -1,8 +1,8 @@
 export class ProductDto {
-  category_id?: number;
-  productName: string = 'Product';
+  categoryId?: number;
+  name: string = 'Product';
   description: string = 'haja bnina barcha';
-  productImage: string = '../../../../assets/background.jpg';
-  productPrice: number = 0;
-  devise: string = 'Dolar';
+  image: string = '../../../../assets/background.jpg';
+  price: number = 0;
+  unit: string = 'Dolar';
 }

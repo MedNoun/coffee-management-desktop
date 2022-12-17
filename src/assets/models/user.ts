@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from './baseEntity';
 
 export enum Role {
   'server' = 'SERVER',
@@ -7,9 +8,9 @@ export enum Role {
 }
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  userId: number;
+  id: number;
   @Column({ unique: true })
   username: string;
   @Column()
@@ -24,6 +25,4 @@ export class User {
   email: string;
   @Column()
   password: string;
-  @Column({ default: false })
-  synced: boolean;
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { dropWhile } from 'lodash';
+import { remove } from 'lodash';
 import { Subject } from 'rxjs';
 import { Product } from '../../../../assets';
 
@@ -16,7 +16,7 @@ export class BillService {
     this.next();
   }
   removeProduct(id: number) {
-    this._products = dropWhile(this.products, { productId: id });
+    remove(this.products, (item) => item.id === id);
   }
 
   // getters

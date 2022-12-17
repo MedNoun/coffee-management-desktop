@@ -11,7 +11,7 @@ export class UserService {
   private mainSubject: Subject<boolean> = new Subject<boolean>();
 
   constructor(private readonly storeService: StoreService) {
-    this.admin = false;
+    this.admin = true;
   }
 
   //Crud Operations for User
@@ -20,7 +20,7 @@ export class UserService {
   }
   public async readOne(
     user: Partial<User> &
-      (Pick<User, 'email'> | Pick<User, 'username'> | Pick<User, 'userId'>)
+      (Pick<User, 'email'> | Pick<User, 'username'> | Pick<User, 'id'>)
   ) {
     return await this.storeService.findOneBy(User.name, user);
   }
@@ -36,7 +36,7 @@ export class UserService {
   }
   public async delete(
     user: Partial<User> &
-      (Pick<User, 'email'> | Pick<User, 'username'> | Pick<User, 'userId'>)
+      (Pick<User, 'email'> | Pick<User, 'username'> | Pick<User, 'id'>)
   ) {
     return await this.storeService.remove(User.name, user);
   }

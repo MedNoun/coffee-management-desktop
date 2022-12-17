@@ -1,3 +1,37 @@
-:host {
-  
+@import "../../styles.scss";
+.fatherof3 {
+  align-items: stretch;
+}
+.child {
+  background-color: $col_blue1;
+  border-radius: 10px;
+}
+.child:nth-child(1) {
+  width: 25vw;
+}
+.child:nth-child(2) {
+  width: 50vw;
+}
+.child:nth-child(3) {
+  width: 25vw;
+}
+.heading {
+  color: $col_white;
+  font-size: 60px;
+  font-family: "Neonderthaw";
+  text-align: center;
+  margin: 20px 15px;
+}
+button {
+  background-color: $col_blue1;
+  font-family: fantasy;
+  color: $col_black;
+  cursor: pointer;
+}
+.icon {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  font-size: 50px;
+  color: $col_blue1;
 }

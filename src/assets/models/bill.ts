@@ -7,34 +7,13 @@ import {
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BaseEntity } from './baseEntity';
 import { Product } from './product';
+import { Purchase } from './purchase';
 import { User } from './user';
 
 @Entity()
-export class Purchase {
-  @PrimaryColumn({ type: 'int', name: 'bill_id' })
-  @ManyToOne(() => Bill, {
-    nullable: false,
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'bill_id' })
-  bill: Bill;
-  @PrimaryColumn({ type: 'int', name: 'product_id' })
-  @ManyToOne(() => Product, {
-    nullable: false,
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn({ name: 'product_id' })
-  product: Product;
-  @Column()
-  quantity: number;
-  @Column()
-  timestamp: Date = new Date();
-}
-
-@Entity()
-export class Bill {
+export class Bill extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => User, {
@@ -42,12 +21,9 @@ export class Bill {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({
-    name: 'user_id',
+    name: 'userId',
   })
   user: User;
   @OneToMany(() => Purchase, (purchase) => purchase.bill)
   purchases: Purchase[];
-
-  @Column({ default: false })
-  synced: boolean;
 }

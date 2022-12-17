@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { dropWhile, find } from 'lodash';
+import { find, remove } from 'lodash';
 import { Subject } from 'rxjs';
 import { Category, Product, Role } from '../../../../assets';
 import { CategoryDto, ProductDto } from '../../../shared/models';
@@ -9,36 +9,45 @@ import { StoreService } from '../store/store.service';
   providedIn: 'root',
 })
 export class ProductService implements OnInit {
+  // this new is just for adding a fake id to the forms to add will be later remove in the persist method
+  private _new: number = -1;
   private _category: number;
   private _categories: Category[];
   private mainSubject: Subject<Category[]> = new Subject<Category[]>();
 
-  constructor(private readonly storeService: StoreService) {
-    this.find();
-  }
+  constructor(private readonly storeService: StoreService) {}
   ngOnInit(): void {}
 
   //database Logic
-  private async find() {
+  public async persist() {
+    const new_array: Category[] = [];
+    for (let el of this.categories) {
+      el.id < 0 && (el.id = undefined);
+      this.storeService.save(Category.name, el).then((category) => {
+        new_array.push(category);
+      });
+    }
+    this.categories = new_array;
+  }
+  public async find() {
     this._categories = await this.storeService.find(Category.name, {
       relations: {
         products: true,
       },
     });
     try {
-      this.currentCategory = this._categories[0].categoryId;
+      this.currentCategory = this.categories[0].id;
     } catch (e) {
       this.currentCategory = -1;
     }
     this.next();
   }
-  public async create(
-    category: Partial<CategoryDto> &
-      Pick<CategoryDto, 'categoryName' | 'products'>
+  private async create(
+    category: Partial<CategoryDto> & Pick<CategoryDto, 'name' | 'products'>
   ) {
     const products: Product[] = await Promise.all(
       category.products.map((v) => {
-        return this.preloadProduct(v);
+        return this.storeService.create(Product.name, v);
       })
     );
 
@@ -46,75 +55,77 @@ export class ProductService implements OnInit {
       ...category,
       products,
     });
-    this.storeService.save(Category.name, _category).then((category) => {
-      this.addCategory(category);
-    });
+    return _category;
   }
-  public async update(id: number, category: Partial<Category>) {
+  //TODO not tested yet
+  private async update(id: number, category: Partial<Category>) {
     return await this.storeService.update(id, Category.name, category);
   }
-  public async delete(category: Category) {
+  private async delete(category: Category) {
     this.storeService.remove(Category.name, category).then((v) => {
-      this.removeCategory(category.categoryId);
+      this.removeCategory(category.id);
     });
   }
-  // helper db functions
-  private async preloadProduct(product: Partial<ProductDto>) {
-    const _product: Product = await this.storeService.findOneBy(
-      Product.name,
-      product
-    );
-    return _product
-      ? _product
-      : // check why the create does not work IMPORTANT //TODO
-        await this.storeService.save(Product.name, product);
+  // helper getters and setters
+
+  public removeCategory(id: number) {
+    remove(this.categories, (item) => item.id === id);
+    if (id === this.currentCategory) {
+      try {
+        this.currentCategory = this.categories[0].id;
+      } catch (e) {
+        this.currentCategory = undefined;
+      }
+    }
+  }
+  public async addCategory(category: Category | CategoryDto) {
+    const cat: Category = await this.create(category);
+    if (!cat.id) {
+      cat.id = this.id;
+    }
+    this.categories.push(cat);
+    this.next();
   }
 
-  //Category Logic
-  get categories() {
-    return this._categories;
+  //Product logic
+  public async addProduct(product: Product | ProductDto) {
+    const _product = await this.storeService.create(Product.name, product);
+    if (!_product.id) {
+      _product.id = this.id;
+    }
+    this.category.products.push(_product);
+    this.next();
   }
-  get category() {
-    return find(this._categories, { categoryId: this.currentCategory });
+  public removeProduct(id: number) {
+    remove(this.category.products, (item) => item.id === id);
+    this.next();
   }
+
+  //getters + setters
   set currentCategory(id: number) {
     this._category = id;
+    this.next();
+  }
+  set categories(cat) {
+    this._categories = cat;
     this.next();
   }
   get currentCategory() {
     return this._category;
   }
-  public removeCategory(id: number) {
-    this._categories = dropWhile(this._categories, { categoryId: id });
-    if (id === this.currentCategory) {
-      try {
-        this.currentCategory = this._categories[0].categoryId;
-      } catch (e) {
-        this.currentCategory = -1;
-      }
-    }
-    this.next();
-  }
-  public addCategory(category: Category) {
-    this._categories.push(category);
-    this.next();
-  }
-
-  //Product logic
   get products(): Product[] {
     return this.category.products;
   }
-  public addProduct(product: Product) {
-    this.category.products.push(product);
-    this.next();
+  get categories() {
+    return this._categories;
   }
-  public removeProduct(id: number) {
-    this.category.products = dropWhile(this.category.products, {
-      productId: id,
-    });
-    this.next();
+  get category() {
+    return find(this._categories, { id: this.currentCategory });
   }
-
+  private get id() {
+    this._new -= 1;
+    return this._new;
+  }
   //observables
   get observable() {
     return this.mainSubject.asObservable();

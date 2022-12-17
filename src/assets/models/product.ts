@@ -1,22 +1,27 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  DeleteDateColumn,
+} from 'typeorm';
+import { BaseEntity } from './baseEntity';
 import { Category } from './category';
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
-  productId: number;
+  id: number;
   @Column()
-  productName: string;
+  name: string;
   @Column()
   description: string;
   @Column()
-  productImage: string;
+  image: string;
   @Column()
-  productPrice: number;
+  price: number;
   @Column()
-  devise: string;
+  unit: string;
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
-  @Column({ default: false })
-  synced: boolean;
 }

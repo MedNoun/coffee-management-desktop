@@ -1,0 +1,82 @@
+<div id="content" #content>
+  <div class="flex center column holder">
+    <div class="title flex center column">
+      <input
+        class="container editable title"
+        value="Title"
+        [readonly]="!admin"
+      />
+      <input class="editable subtitle" value="Subtitle" [readonly]="!admin" />
+      <div class="logo">
+        <img src="../../../../assets/background.jpg" alt="" />
+      </div>
+      <div class="container flex center column">
+        <div class="line">-----------------------------------------</div>
+      </div>
+    </div>
+    <!-- <div class="facture-content">
+      <table>
+        <tr>
+          <td>PRODUIT</td>
+          <td>QUANTITE</td>
+          <td>PRIX</td>
+        </tr>
+        <tr *ngFor="let product of listOfCommand">
+          <td>{{ product.nameOfProduct }}</td>
+          <td>{{ product.quantity }}</td>
+          <td *ngIf="isClient">{{ product.totalPrice | number : "1.0-3" }}</td>
+          <td *ngIf="hidden">
+            <button
+              mat-mini-fab
+              (click)="cancelAllThisCommand(product.nameOfProduct)"
+            >
+              <mat-icon class="pointer">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><h5>Total:</h5></td>
+          <td>
+            {{
+              current > len
+                ? getTotalPriceOfFacture()
+                : (getTotalPriceOfFacture(listOfCommand) | number : "1.0-3")
+            }}
+            DT
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="container flex center column big">
+      <h2 class="container">{{ server }}</h2>
+      <input
+        class="editable title"
+        [(ngModel)]="facture.merci"
+        [value]="facture.merci"
+        [readonly]="context"
+        (ngModelChange)="sendDataToParent()"
+      />
+    </div>
+    <div class="addition">
+      <button mat-flat-button (click)="generatePdfForServers()">
+        <p class="pointer">commande pour serveur</p>
+      </button>
+    </div>
+    <div class="addition">
+      <button mat-flat-button (click)="print()">
+        <p class="pointer">addition pour le client</p>
+      </button>
+    </div>
+    <div class="flex space-between container">
+      <button mat-mini-fab class="back" (click)="getHistory(current - 1)">
+        <mat-icon class="pointer">navigate_before</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" (click)="makePdf()">
+        <mat-icon class="pointer">arrow_drop_down</mat-icon>
+      </button>
+      <button mat-mini-fab class="forward" (click)="getHistory(current + 1)">
+        <mat-icon class="pointer">navigate_next</mat-icon>
+      </button>
+    </div> -->
+  </div>
+</div>

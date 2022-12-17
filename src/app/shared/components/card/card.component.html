@@ -6,10 +6,10 @@
     <input
       style="display: none"
       type="file"
-      (change)="onFileChanged($event, category.categoryId)"
+      (change)="onFileChanged($event, category.id)"
       #fileInput
     />
-    <img class="pointer" [src]="category.categoryImage" />
+    <img class="pointer" [src]="category.image" />
   </igx-card-media>
   <button
     *ngIf="admin"
@@ -24,19 +24,10 @@
       igxCardHeaderTitle
       class="pointer editable"
       [class]="!admin ? '' : 'cursor'"
-      [id]="category.categoryId"
-      [(ngModel)]="category.categoryName"
-      [value]="category.categoryName"
+      [id]="category.id"
+      [(ngModel)]="category.name"
+      [value]="category.name"
       [readonly]="!admin"
     ></textarea>
   </igx-card-header>
 </igx-card>
-
-<!-- <div
-  *ngIf="!context"
-  class="container sample-column card-wrapper flex center but"
->
-  <button mat-fab class="pointer" (click)="add()">
-    <mat-icon class="pointer">add</mat-icon>
-  </button>
-</div> -->

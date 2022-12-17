@@ -24,10 +24,10 @@ export class CardComponent implements OnInit {
     });
   }
   delete() {
-    this.productService.removeCategory(this.category.categoryId);
+    this.productService.removeCategory(this.category.id);
   }
   handleClick() {
-    this.productService.currentCategory = this.category.categoryId;
+    this.productService.currentCategory = this.category.id;
   }
 
   onFileChanged(event, id) {}

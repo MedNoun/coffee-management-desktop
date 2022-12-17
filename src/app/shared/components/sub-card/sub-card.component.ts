@@ -11,7 +11,10 @@ import { UserService } from '../../../core/services/user/user.service';
 export class SubCardComponent implements OnInit {
   @Input('product') private _product: Product = new Product();
   private _admin: boolean;
-  constructor(private readonly userService: UserService) {
+  constructor(
+    private readonly userService: UserService,
+    private readonly productService: ProductService
+  ) {
     this._admin = this.userService.admin;
   }
   ngOnInit(): void {
@@ -22,10 +25,12 @@ export class SubCardComponent implements OnInit {
 
   add() {}
   remove() {}
+  delete() {
+    this.productService.removeProduct(this.product.id);
+  }
 
   commandThisArticle(nameOfProduct: string) {}
   sendDataToParent(event?) {}
-  delete(item) {}
   cancelCommandOfThisArticle(nameOfProduct: string) {}
 
   // getters

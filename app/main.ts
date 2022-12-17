@@ -17,7 +17,7 @@ const db_path = path.join(
   'databases',
   'Database.sqlite'
 );
-const entities = [User, Category, Product, Bill, Purchase];
+const entities = [Category, Product, User, Bill, Purchase];
 const repositories = new Map<string, Repository<any>>();
 const db: DataSource = db_init(db_path);
 
@@ -33,6 +33,7 @@ function db_init(db_path): DataSource {
     database: db_path,
     entities: entities,
   });
+
   // init repositories :
   for (let entity of entities) {
     console.log('creating repositories');
@@ -155,5 +156,5 @@ ipcMain.handle('update', async (event, name, id, object, params) => {
 });
 
 ipcMain.handle('remove', async (event, name, object, params) => {
-  return await repositories.get(name).remove(object);
+  return await repositories.get(name).softRemove(object);
 });
