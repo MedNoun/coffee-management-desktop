@@ -9,25 +9,26 @@ import { StoreService } from '../store/store.service';
   providedIn: 'root',
 })
 export class ProductService implements OnInit {
-  // this new is just for adding a fake id to the forms to add will be later remove in the persist method
-  private _new: number = -1;
   private _category: number;
   private _categories: Category[];
   private mainSubject: Subject<Category[]> = new Subject<Category[]>();
+
+  // this new is just for adding a fake id to the forms to add will be later remove in the persist method
+  private _new: number = 0;
 
   constructor(private readonly storeService: StoreService) {}
   ngOnInit(): void {}
 
   //database Logic
   public async persist() {
-    const new_array: Category[] = [];
     for (let el of this.categories) {
       el.id < 0 && (el.id = undefined);
-      this.storeService.save(Category.name, el).then((category) => {
-        new_array.push(category);
-      });
+      for (let pro of el.products) {
+        pro.id < 0 && (pro.id = undefined);
+      }
+      await this.storeService.save(Category.name, el);
     }
-    this.categories = new_array;
+    await this.find();
   }
   public async find() {
     this._categories = await this.storeService.find(Category.name, {
