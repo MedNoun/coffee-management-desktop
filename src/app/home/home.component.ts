@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
   private _categories: Category[];
   private _category: Category;
   private _admin: boolean;
+  public isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -34,7 +35,9 @@ export class HomeComponent implements OnInit {
     });
   }
   async saveChanges() {
+    this.isLoading = true;
     await this.productService.persist();
+    this.productService.find().then(() => (this.isLoading = false));
   }
   async addProduct() {
     const product = new ProductDto();
@@ -43,9 +46,6 @@ export class HomeComponent implements OnInit {
   async addCategory() {
     const category = new CategoryDto();
     await this.productService.addCategory(category);
-  }
-  async deleteCategory() {
-    await this.productService.removeCategory(this.categories[0].id);
   }
 
   // getters setters

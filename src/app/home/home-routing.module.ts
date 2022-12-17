@@ -8,15 +8,15 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    resolve:{
-      categories: HomeResolver 
-    }
-  }
+    resolve: {
+      categories: HomeResolver,
+    },
+  },
 ];
 
 @NgModule({
   declarations: [],
   imports: [CommonModule, RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class HomeRoutingModule {}

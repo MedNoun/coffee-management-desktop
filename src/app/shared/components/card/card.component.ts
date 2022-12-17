@@ -32,8 +32,6 @@ export class CardComponent implements OnInit {
 
   onFileChanged(event, id) {}
 
-  callSubProducts(name: string) {}
-
   // getters :
   get admin() {
     return this._admin;

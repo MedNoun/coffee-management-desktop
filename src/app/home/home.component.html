@@ -1,3 +1,50 @@
+<ng-template #loader>
+  <div class="container child flex wrap back center">
+    <app-loader class="loader"></app-loader>
+  </div>
+</ng-template>
+<ng-template #subCards>
+  <div class="container child flex wrap back">
+    <ng-container *ngIf="category">
+      <app-sub-card
+        *ngFor="let item of category.products"
+        [product]="item"
+      ></app-sub-card>
+    </ng-container>
+
+    <div
+      *ngIf="admin"
+      class="container sample-column card-wrapper flex center but"
+    >
+      <button
+        mat-fab
+        class="pointer"
+        [disabled]="!category"
+        (click)="addProduct()"
+      >
+        <mat-icon class="pointer">add</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #cards>
+  <div class="container child flex wrap back card">
+    <app-card
+      class="sample-column card-wrapper container"
+      *ngFor="let item of categories"
+      [category]="item"
+    ></app-card>
+
+    <div
+      *ngIf="admin"
+      class="container sample-column card-wrapper flex center but"
+    >
+      <button mat-fab class="pointer" (click)="addCategory()">
+        <mat-icon class="pointer">add</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
 <div class="flex column father">
   <div class="container pointer">
     <mat-icon class="icon pointer">close</mat-icon>
@@ -5,44 +52,12 @@
   <input class="heading editable" value="Management" [readonly]="!admin" />
 
   <div class="container flex fatherof3">
-    <div class="container child flex wrap back card">
-      <app-card
-        class="sample-column card-wrapper container"
-        *ngFor="let item of categories"
-        [category]="item"
-      ></app-card>
-      <div
-        *ngIf="admin"
-        class="container sample-column card-wrapper flex center but"
-      >
-        <button mat-fab class="pointer" (click)="addCategory()">
-          <mat-icon class="pointer">add</mat-icon>
-        </button>
-      </div>
-    </div>
+    <ng-container *ngTemplateOutlet="isLoading ? loader : cards"></ng-container>
 
-    <div class="container child flex wrap back">
-      <ng-container *ngIf="category">
-        <app-sub-card
-          *ngFor="let item of category.products"
-          [product]="item"
-        ></app-sub-card>
-      </ng-container>
+    <ng-container
+      *ngTemplateOutlet="isLoading ? loader : subCards"
+    ></ng-container>
 
-      <div
-        *ngIf="admin"
-        class="container sample-column card-wrapper flex center but"
-      >
-        <button
-          mat-fab
-          class="pointer"
-          [disabled]="!category"
-          (click)="addProduct()"
-        >
-          <mat-icon class="pointer">add</mat-icon>
-        </button>
-      </div>
-    </div>
     <div class="container child container flex wrap">
       <app-bill></app-bill>
     </div>
@@ -68,11 +83,7 @@
     </button>
 
     <div *ngIf="admin">
-      <button
-        mat-flat-button
-        (click)="saveChanges()"
-        [swal]="['Enregistré!', 'Vos changement ont été enregistré', 'success']"
-      >
+      <button mat-flat-button (click)="saveChanges()">
         <p class="pointer">Save Changes</p>
       </button>
     </div>

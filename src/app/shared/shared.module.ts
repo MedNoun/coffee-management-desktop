@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatRadioModule } from '@angular/material/radio';
     WebviewDirective,
     CardComponent,
     SubCardComponent,
+    LoaderComponent,
   ],
   imports: [
     CommonModule,
@@ -47,6 +49,7 @@ import { MatRadioModule } from '@angular/material/radio';
     FormsModule,
     CardComponent,
     SubCardComponent,
+    LoaderComponent,
   ],
 })
 export class SharedModule {}
