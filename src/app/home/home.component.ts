@@ -43,6 +43,11 @@ export class HomeComponent implements OnInit {
   }
   public async finish() {
     await this.billService.closeBill();
+    Swal.fire(
+      'Bill executed !',
+      'Your command was launched successfully !',
+      'success'
+    );
   }
   // getters setters
   get categories() {

@@ -7,7 +7,7 @@ import { StoreService } from '../store/store.service';
 })
 export class UserService {
   private _admin: boolean;
-  private _user: User = new User();
+  private _users: User[] = [];
 
   constructor(private readonly storeService: StoreService) {
     this.admin = true;
@@ -15,7 +15,8 @@ export class UserService {
 
   //Crud Operations for User
   public async readAll() {
-    return await this.storeService.find(User.name);
+    this._users = await this.storeService.find(User.name);
+    console.log(this._users);
   }
   public async readOne(
     user: Partial<User> &
@@ -40,9 +41,14 @@ export class UserService {
     return await this.storeService.remove(User.name, user);
   }
 
+  auth(obj) {}
+
   //getters
   get admin() {
     return this._admin;
+  }
+  get users() {
+    return this._users;
   }
   private set admin(v: boolean) {
     this._admin = v;

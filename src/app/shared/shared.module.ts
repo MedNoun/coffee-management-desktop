@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { PageNotFoundComponent } from './components/';
 import { WebviewDirective } from './directives/';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent } from './components/card/card.component';
 import { SubCardComponent } from './components/sub-card/sub-card.component';
 import {
@@ -30,7 +30,13 @@ import { UiModule } from '../ui/ui.module';
     SubCardComponent,
     LoaderComponent,
   ],
-  imports: [CommonModule, TranslateModule, FormsModule, UiModule],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    FormsModule,
+    UiModule,
+    ReactiveFormsModule,
+  ],
   exports: [
     WebviewDirective,
     CardComponent,
@@ -38,6 +44,7 @@ import { UiModule } from '../ui/ui.module';
     LoaderComponent,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     UiModule,
     TranslateModule,
   ],

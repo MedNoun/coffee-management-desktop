@@ -1,9 +1,9 @@
-<ng-template #loader>
+<ng-template #loaderTemplate>
   <div class="container child flex wrap back center">
     <app-loader class="loader"></app-loader>
   </div>
 </ng-template>
-<ng-template #subCards>
+<ng-template #subCardsTemplate>
   <div class="container child flex wrap back">
     <ng-container *ngIf="category">
       <app-sub-card
@@ -27,7 +27,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #cards>
+<ng-template #cardsTemplate>
   <div class="container child flex wrap back card">
     <app-card
       class="sample-column card-wrapper container"
@@ -45,6 +45,11 @@
     </div>
   </div>
 </ng-template>
+<ng-template #billTemplate>
+  <div class="container child container flex wrap">
+    <app-bill [bill]="bill"></app-bill>
+  </div>
+</ng-template>
 
 <div class="flex column father">
   <div class="container pointer">
@@ -53,15 +58,15 @@
   <input class="heading editable" value="Management" [readonly]="!admin" />
 
   <div class="container flex fatherof3">
-    <ng-container *ngTemplateOutlet="isLoading ? loader : cards"></ng-container>
-
     <ng-container
-      *ngTemplateOutlet="isLoading ? loader : subCards"
+      *ngTemplateOutlet="isLoading ? loaderTemplate : cardsTemplate"
     ></ng-container>
-
-    <div class="container child container flex wrap">
-      <app-bill [bill]="bill"></app-bill>
-    </div>
+    <ng-container
+      *ngTemplateOutlet="isLoading ? loaderTemplate : subCardsTemplate"
+    ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="isLoading ? loaderTemplate : billTemplate"
+    ></ng-container>
   </div>
   <div class="container flex space-around wrap footer">
     <div>
@@ -74,12 +79,17 @@
           'warning'
         ]"
       ></button>
-      <button mat-flat-button color="warn" (click)="reset()">
+      <button mat-flat-button color="primary" (click)="reset()">
         <p class="pointer">Reset</p>
       </button>
     </div>
 
-    <button mat-flat-button color="warn" (click)="finish()">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="finish()"
+      [disabled]="bill.purchases.length == 0"
+    >
       <p class="pointer">Finish</p>
     </button>
 
