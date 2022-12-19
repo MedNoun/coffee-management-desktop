@@ -1,5 +1,4 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
 
@@ -8,7 +7,7 @@ import { StoreService } from '../store/store.service';
 })
 export class UserService {
   private _admin: boolean;
-  private mainSubject: Subject<boolean> = new Subject<boolean>();
+  private _user: User = new User();
 
   constructor(private readonly storeService: StoreService) {
     this.admin = true;
@@ -47,13 +46,5 @@ export class UserService {
   }
   private set admin(v: boolean) {
     this._admin = v;
-    this.next(v);
-  }
-  //observables methods
-  get observable() {
-    return this.mainSubject.asObservable();
-  }
-  next(context: boolean) {
-    this.mainSubject.next(context);
   }
 }

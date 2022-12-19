@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Category, Product } from '../../../../assets';
-import { ProductService } from '../../../core/services';
+import { BillService, ProductService } from '../../../core/services';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
@@ -10,21 +10,19 @@ import { UserService } from '../../../core/services/user/user.service';
 })
 export class SubCardComponent implements OnInit {
   @Input('product') private _product: Product = new Product();
-  private _admin: boolean;
   constructor(
     private readonly userService: UserService,
-    private readonly productService: ProductService
-  ) {
-    this._admin = this.userService.admin;
-  }
-  ngOnInit(): void {
-    this.userService.observable.subscribe((v) => {
-      this._admin = v;
-    });
-  }
+    private readonly productService: ProductService,
+    private readonly billService: BillService
+  ) {}
+  ngOnInit(): void {}
 
-  add() {}
-  remove() {}
+  add() {
+    this.billService.addProduct(this.product);
+  }
+  remove() {
+    this.billService.removeProduct(this.product);
+  }
   delete() {
     this.productService.removeProduct(this.product.id);
   }
@@ -35,7 +33,7 @@ export class SubCardComponent implements OnInit {
 
   // getters
   get admin() {
-    return this._admin;
+    return this.userService.admin;
   }
   get product() {
     return this._product;

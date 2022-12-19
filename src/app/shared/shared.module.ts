@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { LoaderComponent } from './components/loader/loader.component';
+import { UiModule } from '../ui/ui.module';
 
 @NgModule({
   declarations: [
@@ -29,27 +30,16 @@ import { LoaderComponent } from './components/loader/loader.component';
     SubCardComponent,
     LoaderComponent,
   ],
-  imports: [
-    CommonModule,
-    TranslateModule,
-    FormsModule,
-    IgxButtonModule,
-    IgxIconModule,
-    IgxCardModule,
-    IgxRippleModule,
-    IgxRadioModule,
-    MatIconModule,
-    MatButtonModule,
-    MatInputModule,
-    MatRadioModule,
-  ],
+  imports: [CommonModule, TranslateModule, FormsModule, UiModule],
   exports: [
-    TranslateModule,
     WebviewDirective,
-    FormsModule,
     CardComponent,
     SubCardComponent,
     LoaderComponent,
+    CommonModule,
+    FormsModule,
+    UiModule,
+    TranslateModule,
   ],
 })
 export class SharedModule {}

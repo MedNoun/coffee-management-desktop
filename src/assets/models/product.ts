@@ -10,8 +10,6 @@ import { Category } from './category';
 
 @Entity()
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
   @Column()
   name: string;
   @Column()
@@ -22,6 +20,8 @@ export class Product extends BaseEntity {
   price: number;
   @Column()
   unit: string;
-  @ManyToOne(() => Category, (category) => category.products)
+  @ManyToOne(() => Category, (category) => category.products, {
+    nullable: false,
+  })
   category: Category;
 }

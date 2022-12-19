@@ -1,7 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { concat, find, remove } from 'lodash';
-import { Subject } from 'rxjs';
 import { Category, Product, Role } from '../../../../assets';
 import { CategoryDto, ProductDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
@@ -11,8 +9,7 @@ import { StoreService } from '../store/store.service';
 })
 export class ProductService implements OnInit {
   private _category: number;
-  private _categories: Category[];
-  private mainSubject: Subject<Category[]> = new Subject<Category[]>();
+  private _categories: Category[] = [];
 
   // this new is just for adding a fake id to the forms to add will be later remove in the persist method
   private newId: number = 0;
@@ -39,9 +36,7 @@ export class ProductService implements OnInit {
     }
     this.toDelete = [];
     this.categories = [];
-    
   }
-
   public async find() {
     this._categories = await this.storeService.find(Category.name, {
       relations: {
@@ -49,7 +44,8 @@ export class ProductService implements OnInit {
       },
     });
     this.currentCategory = this.categories.length ? this.categories[0].id : -1;
-    this.next();
+
+    return this._categories;
   }
   private async create(
     category: Partial<CategoryDto> & Pick<CategoryDto, 'name' | 'products'>
@@ -66,8 +62,8 @@ export class ProductService implements OnInit {
     });
     return _category;
   }
-  // helper getters and setters
 
+  //category logic
   public removeCategory(id: number) {
     const index: number = this.categories.findIndex((item) => item.id === id);
     const removed: Category[] = this.categories.splice(index, 1);
@@ -82,7 +78,6 @@ export class ProductService implements OnInit {
     const cat: Category = await this.create(category);
     !cat.id && (cat.id = this.id);
     this.categories.push(cat);
-    this.next();
   }
 
   //Product logic
@@ -90,42 +85,32 @@ export class ProductService implements OnInit {
     const _product = await this.storeService.create(Product.name, product);
     !_product.id && (_product.id = this.id);
     this.category.products.push(_product);
-    this.next();
   }
   public removeProduct(id: number) {
     const index = this.category.products.findIndex((item) => item.id === id);
     const removed = this.category.products.splice(index, 1);
-    this.next();
   }
 
   //getters + setters
-  set currentCategory(id: number) {
-    this._category = id;
-    this.next();
-  }
-  set categories(cat) {
-    this._categories = cat;
-    this.next();
-  }
-  get currentCategory() {
+  public get currentCategory() {
     return this._category;
   }
-  get categories() {
+  public get categories() {
     return this._categories;
   }
-  get category() {
-    return find(this._categories, { id: this.currentCategory });
+  public get category() {
+    return this._categories.find(
+      (category) => category.id === this.currentCategory
+    );
   }
   private get id() {
     this.newId -= 1;
     return this.newId;
   }
-
-  //observables
-  get observable() {
-    return this.mainSubject.asObservable();
+  public set currentCategory(id: number) {
+    this._category = id;
   }
-  private next() {
-    this.mainSubject.next(this._categories);
+  private set categories(cat) {
+    this._categories = cat;
   }
 }

@@ -1,16 +1,8 @@
-import {
-  Column,
-  DeleteDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from './baseEntity';
 import { Product } from './product';
 @Entity()
 export class Category extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
   @Column()
   name: string;
   @Column()
@@ -18,7 +10,7 @@ export class Category extends BaseEntity {
   @OneToMany(() => Product, (product) => product.category, {
     cascade: true,
     onDelete: 'CASCADE',
-    createForeignKeyConstraints: false,
+    onUpdate: 'CASCADE',
   })
   products: Product[];
 }

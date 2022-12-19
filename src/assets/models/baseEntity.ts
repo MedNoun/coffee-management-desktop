@@ -1,7 +1,15 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
   @CreateDateColumn()
   createAt: Date;
   @DeleteDateColumn()

@@ -7,20 +7,26 @@ import {
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Category } from '../../../../../assets';
+import { BillService } from '../../bill/bill.service';
 import { ProductService } from '../../product/product.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HomeResolver implements Resolve<boolean> {
-  constructor(private readonly productService: ProductService) {}
+export class HomeResolver implements Resolve<any> {
+  constructor(
+    private readonly productService: ProductService,
+    private readonly billService: BillService
+  ) {}
   async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.productService
+    const productInit = this.productService
       .find()
       .then(() => true)
       .catch((e) => {
-        console.log('Error Resolver : ', e);
+        console.log('Error Home Resolver : ', e);
         return false;
       });
+    const billInit = await this.billService.init();
+    return { productInit, billInit };
   }
 }

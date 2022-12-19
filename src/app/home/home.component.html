@@ -45,6 +45,7 @@
     </div>
   </div>
 </ng-template>
+
 <div class="flex column father">
   <div class="container pointer">
     <mat-icon class="icon pointer">close</mat-icon>
@@ -59,7 +60,7 @@
     ></ng-container>
 
     <div class="container child container flex wrap">
-      <app-bill></app-bill>
+      <app-bill [bill]="bill"></app-bill>
     </div>
   </div>
   <div class="container flex space-around wrap footer">
@@ -73,13 +74,13 @@
           'warning'
         ]"
       ></button>
-      <button mat-flat-button color="warn">
-        <p class="pointer">Start Command</p>
+      <button mat-flat-button color="warn" (click)="reset()">
+        <p class="pointer">Reset</p>
       </button>
     </div>
 
-    <button mat-flat-button color="warn">
-      <p class="pointer">Finish Command</p>
+    <button mat-flat-button color="warn" (click)="finish()">
+      <p class="pointer">Finish</p>
     </button>
 
     <div *ngIf="admin">

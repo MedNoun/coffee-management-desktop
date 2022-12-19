@@ -9,20 +9,12 @@ import { UserService } from '../../../core/services/user/user.service';
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent implements OnInit {
-  private _admin: boolean;
   @Input('category') private _category: Category = new Category();
   constructor(
     private readonly productService: ProductService,
     private readonly userService: UserService
-  ) {
-    this._admin = this.userService.admin;
-  }
-  ngOnInit(): void {
-    // get the user context on change
-    this.userService.observable.subscribe((v: boolean) => {
-      this._admin = v;
-    });
-  }
+  ) {}
+  ngOnInit(): void {}
   delete() {
     this.productService.removeCategory(this.category.id);
   }
@@ -34,7 +26,7 @@ export class CardComponent implements OnInit {
 
   // getters :
   get admin() {
-    return this._admin;
+    return this.userService.admin;
   }
   get category() {
     return this._category;

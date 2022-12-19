@@ -13,7 +13,6 @@ import { Product } from './product';
 
 @Entity()
 export class Purchase extends BaseEntity {
-  @PrimaryColumn({ type: 'int', name: 'billId' })
   @ManyToOne(() => Bill, {
     nullable: false,
     onUpdate: 'CASCADE',
@@ -21,7 +20,6 @@ export class Purchase extends BaseEntity {
   })
   @JoinColumn({ name: 'billId' })
   bill: Bill;
-  @PrimaryColumn({ type: 'int', name: 'productId' })
   @ManyToOne(() => Product, {
     nullable: false,
     onUpdate: 'CASCADE',

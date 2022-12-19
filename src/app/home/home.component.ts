@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category } from '../../assets';
-import { ProductService } from '../core/services';
+import Swal from 'sweetalert2';
+import { Bill, Category } from '../../assets';
+import { BillService, ProductService } from '../core/services';
 import { UserService } from '../core/services/user/user.service';
 import { CategoryDto, ProductDto } from '../shared/models';
 
@@ -11,51 +12,49 @@ import { CategoryDto, ProductDto } from '../shared/models';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  private _categories: Category[];
-  private _category: Category;
-  private _admin: boolean;
   public isLoading: boolean = false;
 
   constructor(
-    private router: Router,
     private readonly userService: UserService,
-    private readonly productService: ProductService
-  ) {
-    this._categories = this.productService.categories;
-    this._category = this.productService.category;
-    this._admin = this.userService.admin;
-  }
-  ngOnInit(): void {
-    this.productService.observable.subscribe((v) => {
-      this._categories = v;
-      this._category = this.productService.category;
-    });
-    this.userService.observable.subscribe((v) => {
-      this._admin = v;
-    });
-  }
-  async saveChanges() {
+    private readonly productService: ProductService,
+    private readonly billService: BillService
+  ) {}
+  ngOnInit(): void {}
+  // admin handlers functions
+  public async saveChanges() {
     this.isLoading = true;
     await this.productService.persist();
-    this.productService.find().then(() => (this.isLoading = false));
+    this.productService.find().then(() => {
+      this.isLoading = false;
+      Swal.fire('Saved !', 'Your changes were saved successfully !', 'success');
+    });
   }
-  async addProduct() {
+  public async addProduct() {
     const product = new ProductDto();
     await this.productService.addProduct(product);
   }
-  async addCategory() {
+  public async addCategory() {
     const category = new CategoryDto();
     await this.productService.addCategory(category);
   }
-
+  // Command functions
+  public async reset() {
+    await this.billService.init();
+  }
+  public async finish() {
+    await this.billService.closeBill();
+  }
   // getters setters
   get categories() {
-    return this._categories;
+    return this.productService.categories;
   }
   get category() {
-    return this._category;
+    return this.productService.category;
   }
   get admin() {
-    return this._admin;
+    return this.userService.admin;
+  }
+  get bill() {
+    return this.billService.bill;
   }
 }
