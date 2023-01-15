@@ -1,18 +1,28 @@
 import { Injectable, OnInit } from '@angular/core';
 import { User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private _admin: boolean;
+  private _currentUser: User;
   private _users: User[] = [];
 
-  constructor(private readonly storeService: StoreService) {
+  constructor(
+    private readonly storeService: StoreService,
+    private readonly authService: AuthService
+  ) {
     this.admin = true;
   }
-
+  //login operations
+  public async login(user: Partial<User>) {
+    try {
+      this.currentUser = await this.authService.localLogin(user);
+    } catch {}
+  }
   //Crud Operations for User
   public async readAll() {
     this._users = await this.storeService.find(User.name);
@@ -41,8 +51,6 @@ export class UserService {
     return await this.storeService.remove(User.name, user);
   }
 
-  auth(obj) {}
-
   //getters
   get admin() {
     return this._admin;
@@ -50,7 +58,15 @@ export class UserService {
   get users() {
     return this._users;
   }
+  get currentUser() {
+    return this._currentUser;
+  }
+
+  //setters
   private set admin(v: boolean) {
     this._admin = v;
+  }
+  private set currentUser(user: User) {
+    this._currentUser = user;
   }
 }

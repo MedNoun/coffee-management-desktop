@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Bill, Product } from '../../../../assets';
-import { BillService } from '../../../core/services';
+import { BillService, HistoryService } from '../../../core/services';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
@@ -22,6 +22,7 @@ export class BillComponent implements OnInit {
   gPdfServers() {
     throw new Error('Method not implemented.');
   }
+
   deleteProduct(product: Product) {
     this.billService.deleteProduct(product);
   }

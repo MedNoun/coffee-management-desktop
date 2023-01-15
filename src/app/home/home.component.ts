@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
     return this.userService.admin;
   }
   get bill() {
+   
     return this.billService.bill;
   }
 }

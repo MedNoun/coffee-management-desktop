@@ -34,7 +34,6 @@
       *ngFor="let item of categories"
       [category]="item"
     ></app-card>
-
     <div
       *ngIf="admin"
       class="container sample-column card-wrapper flex center but"
@@ -64,9 +63,7 @@
     <ng-container
       *ngTemplateOutlet="isLoading ? loaderTemplate : subCardsTemplate"
     ></ng-container>
-    <ng-container
-      *ngTemplateOutlet="isLoading ? loaderTemplate : billTemplate"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="billTemplate"></ng-container>
   </div>
   <div class="container flex space-around wrap footer">
     <div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../core/services';
 import { UserService } from '../core/services/user/user.service';
 
 @Component({
@@ -14,6 +15,7 @@ export class AuthComponent implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
+    private readonly authService: AuthService,
     private readonly userService: UserService
   ) {}
 
@@ -29,9 +31,11 @@ export class AuthComponent implements OnInit {
         username: this.loginForm.get('username').value,
         password: this.loginForm.get('password').value,
       };
+      console.log('this is the sended payload :', payload);
 
-      this.userService.auth(payload);
-      this.router.navigateByUrl('home');
+      this.authService.localLogin(payload).then((re) => {
+        console.log('ree', re);
+      });
     }
   }
 
