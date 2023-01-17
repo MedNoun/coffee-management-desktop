@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../core/services';
 import { UserService } from '../core/services/user/user.service';
 
@@ -15,42 +16,28 @@ export class AuthComponent implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private readonly authService: AuthService,
     private readonly userService: UserService
   ) {}
 
   ngOnInit() {
+    this.userService.observable.subscribe((v) => {
+      this.router.navigateByUrl('home');
+    });
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
-  onSubmit() {
+  async onSubmit() {
     if (this.loginForm.valid) {
       const payload = {
         username: this.loginForm.get('username').value,
         password: this.loginForm.get('password').value,
       };
-      console.log('this is the sended payload :', payload);
-
-      this.authService.localLogin(payload).then((re) => {
-        console.log('ree', re);
-      });
+      await this.userService.login(payload);
     }
   }
 
-  // onSubmit() {
-  //   if (this.loginForm.valid) {
-  //     this.myService.login(this.loginForm.value).subscribe(
-  //       (response) => {
-  //         // handle successful login
-  //       },
-  //       (error) => {
-  //         // handle login error
-  //       }
-  //     );
-  //   }
-  // }
   get users() {
     return this.userService.users;
   }

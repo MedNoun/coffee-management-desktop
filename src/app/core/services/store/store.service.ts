@@ -23,4 +23,13 @@ export class StoreService {
   public async remove(name: string, object, params: any = {}) {
     return await window.api.invoke('remove', name, object, params);
   }
+  public async set(key: string, value: any) {
+    return await window.api.send("set",key, value);
+  }
+  public async get(key: string) {
+    return await window.api.invoke("get",key);
+  }
+  public async delete(key: string) {
+    return await window.api.invoke("delete",key);
+  }
 }
