@@ -12,6 +12,9 @@ export class HistoryService {
   private currentBill: number = -1;
 
   constructor(private readonly storeService: StoreService) {}
+  public init() {
+    this.currentBill = -1;
+  }
   public async populate() {
     if (this.bills.length === this.limit) {
       this.offset = this.limit;

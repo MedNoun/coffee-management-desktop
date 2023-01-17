@@ -10,7 +10,6 @@ import { UserService } from '../../../core/services/user/user.service';
 })
 export class BillComponent implements OnInit {
   @Input('bill') private _currentBill: Bill;
-  private historyBill: Bill;
   public isLoading: boolean = false;
   constructor(
     private readonly userService: UserService,
@@ -28,13 +27,12 @@ export class BillComponent implements OnInit {
 
   async previous() {
     this.isLoading = true;
-    this.historyService.previous().then((v) => {
-      this.historyBill = v;
+    this.billService.previous().then(() => {
       this.isLoading = false;
     });
   }
   next() {
-    this.historyBill = this.historyService.next();
+    this.billService.next();
   }
   deleteProduct(product: Product) {
     this.billService.deleteProduct(product);
@@ -46,11 +44,7 @@ export class BillComponent implements OnInit {
     return this.userService.currentUser;
   }
   get bill() {
-    if (!this.historyBill) {
-      return this._currentBill;
-    } else {
-      return this.historyBill;
-    }
+    return this._currentBill;
   }
   private set bill(b: Bill) {
     this._currentBill = b;

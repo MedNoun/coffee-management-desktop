@@ -94,7 +94,7 @@ export class ProductService implements OnInit {
   }
 
   //changing product picture functionality
-  public async changePicture(file: any, id: number) {
+  public async changeCategoryPicture(file: any, id: number) {
     const fileName: string = id + '.' + file.name.split('.').at(-1);
     this.storeService
       .copyFile(fileName, file.path, 'icons')
@@ -112,6 +112,20 @@ export class ProductService implements OnInit {
         //catch error
       });
   }
+  public async changeProductPicture(file: any, id: number) {
+    const fileName: string = id + '.' + file.name.split('.').at(-1);
+    this.storeService
+      .copyFile(fileName, file.path, 'icons')
+      .then((newPath: string) => {
+        const old = this.category.products.find((product) => product.id === id);
+        old.image = newPath;
+        this.mainSubject.next(this.categories);
+      })
+      .catch((e) => {
+        //catch error
+      });
+  }
+
   //getters + setters
   public get observable() {
     return this.mainSubject.asObservable();

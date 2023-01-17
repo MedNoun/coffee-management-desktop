@@ -9,12 +9,15 @@ import { StoreService } from '../store/store.service';
 })
 export class BillService {
   private _bill: Bill;
+  private _currentBill: Bill;
   constructor(
     private readonly historyService: HistoryService,
     private readonly storeService: StoreService
   ) {}
   public async init() {
     this.bill = await this.storeService.create(Bill.name, new BillDto());
+    this._currentBill = this.bill;
+    this.historyService.init();
   }
   public async closeBill() {
     if (this.bill.purchases.length) {
@@ -29,6 +32,12 @@ export class BillService {
       this.historyService.pushBill(bill);
       await this.init();
     }
+  }
+  public async previous() {
+    this.bill = await this.historyService.previous();
+  }
+  public next() {
+    this.bill = this.historyService.next() || this.currentBill;
   }
   public async addProduct(product: Product) {
     const existingPurchase = this.bill.purchases.find(
@@ -70,5 +79,11 @@ export class BillService {
   }
   private set bill(bill: Bill) {
     this._bill = bill;
+  }
+  get currentBill() {
+    return this._currentBill;
+  }
+  set currentBill(bill) {
+    this._currentBill = bill;
   }
 }

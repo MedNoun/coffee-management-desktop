@@ -4,8 +4,22 @@
   </div>
   <igx-card>
     <igx-card-media height="100px">
+      <input
+        style="display: none"
+        type="file"
+        (change)="onFileChange($event, product.id)"
+        #fileInput
+      />
       <img [src]="product.image" />
     </igx-card-media>
+    <button
+      *ngIf="admin"
+      class="photo"
+      mat-raised-button
+      (click)="fileInput.click()"
+    >
+      <p class="pointer">Select File</p>
+    </button>
 
     <igx-card-header>
       <div *ngIf="!admin">
