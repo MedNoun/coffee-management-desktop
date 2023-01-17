@@ -13,13 +13,22 @@ import { CategoryDto, ProductDto } from '../shared/models';
 })
 export class HomeComponent implements OnInit {
   public isLoading: boolean = false;
-
+  private _categories: Category[];
+  private _category: Category;
   constructor(
     private readonly userService: UserService,
     private readonly productService: ProductService,
     private readonly billService: BillService
-  ) {}
-  ngOnInit(): void {}
+  ) {
+    this._categories = this.productService.categories;
+    this._category = this.productService.category;
+  }
+  ngOnInit(): void {
+    this.productService.observable.subscribe((categories) => {
+      this._categories = categories;
+      this._category = this.productService.category;
+    });
+  }
   // admin handlers functions
   public async saveChanges() {
     this.isLoading = true;
@@ -51,16 +60,15 @@ export class HomeComponent implements OnInit {
   }
   // getters setters
   get categories() {
-    return this.productService.categories;
+    return this._categories;
   }
   get category() {
-    return this.productService.category;
+    return this._category;
   }
   get admin() {
     return this.userService.admin;
   }
   get bill() {
-   
     return this.billService.bill;
   }
 }

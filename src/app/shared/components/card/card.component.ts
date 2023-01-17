@@ -22,7 +22,18 @@ export class CardComponent implements OnInit {
     this.productService.currentCategory = this.category.id;
   }
 
-  onFileChanged(event, id) {}
+  async onFileChanged(event, id) {
+    console.log('event : ', event.target.files[0]);
+
+    const response = await this.productService.changePicture(
+      event.target.files[0],
+      id
+    );
+    // if (response) {
+    //   // throw error failed
+    // } else {
+    // }
+  }
 
   // getters :
   get admin() {

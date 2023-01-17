@@ -23,9 +23,11 @@ export class AuthService {
       'User',
       identifier
     );
+    console.log(requested, user);
 
     if (requested) {
       const hashed = bcrypt.hashSync(user.password, requested.salt);
+
       if (hashed === requested.password) {
         return requested;
       }
@@ -40,6 +42,7 @@ export class AuthService {
   // }
   async login(user: Partial<User>) {
     const _user: User = await this.localLogin(user);
+
     if (_user) {
       if (_user.role === Role.admin) {
         const token = await this.storeService.get(_user.username);
