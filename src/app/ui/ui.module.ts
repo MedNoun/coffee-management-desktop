@@ -12,7 +12,6 @@ import {
   IgxRadioModule,
   IgxRippleModule,
 } from 'igniteui-angular';
-import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 @NgModule({
   declarations: [],
