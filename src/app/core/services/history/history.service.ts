@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '..';
+import { StoreService } from '../store/store.service';
 import { Bill } from '../../../../assets';
 
 @Injectable({
@@ -9,43 +9,49 @@ export class HistoryService {
   private limit: number = 0;
   private offset: number = 0;
   private _bills: Bill[] = [];
-  private currentBill: number = 0;
+  private currentBill: number = -1;
+
   constructor(private readonly storeService: StoreService) {}
   public async populate() {
-    this.offset = this.limit;
-    this.limit += 10;
-    const ancientBills: Bill[] = await this.storeService.find(Bill.name, {
-      relations: ['purchases', 'purchases.product'],
-      limit: this.limit,
-      offset: this.offset,
-      withDeleted: true,
-    });
-    console.log(
-      'this is the bills mq lskjdfqmsldkf jqmsldkfj mqslkfd j: ',
-      ancientBills
-    );
-
-    this.bills = [...this.bills, ...ancientBills];
+    if (this.bills.length === this.limit) {
+      this.offset = this.limit;
+      this.limit += 10;
+      const ancientBills: Bill[] = await this.storeService.find(Bill.name, {
+        relations: ['purchases', 'purchases.product'],
+        limit: this.limit,
+        offset: this.offset,
+        withDeleted: true,
+      });
+      this.bills = [...this.bills, ...ancientBills];
+      return true;
+    }
+    return false;
+  }
+  public pushBill(bill: Bill) {
+    this.bills = [...this.bills, bill];
   }
   public async previous() {
-    if (this.currentBill + 1 >= this.limit) {
-      await this.populate();
-    }
-    if (this.currentBill < this.bills.length - 1) {
+    if (this.currentBill + 1 === this.bills.length) {
+      if (await this.populate()) {
+        this.currentBill += 1;
+      }
+    } else {
       this.currentBill += 1;
     }
     return this.bill;
   }
   public next() {
-    if (this.currentBill) {
+    if (this.currentBill > 0) {
       this.currentBill -= 1;
       return this.bill;
+    } else {
+      this.currentBill = -1;
     }
   }
   public get bills() {
     return this._bills;
   }
-  public get bill() {
+  private get bill() {
     return this.bills[this.currentBill];
   }
   private set bills(items: Bill[]) {
