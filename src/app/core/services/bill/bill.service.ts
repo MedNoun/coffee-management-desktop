@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HistoryService } from '../history/history.service';
 import { Bill, Product, Purchase, User } from '../../../../assets';
 import { BillDto, PurchaseDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
@@ -8,7 +9,10 @@ import { StoreService } from '../store/store.service';
 })
 export class BillService {
   private _bill: Bill;
-  constructor(private readonly storeService: StoreService) {}
+  constructor(
+    private readonly historyService: HistoryService,
+    private readonly storeService: StoreService
+  ) {}
   public async init() {
     this.bill = await this.storeService.create(Bill.name, new BillDto());
   }
@@ -22,6 +26,7 @@ export class BillService {
         ...this.bill,
         user,
       });
+      this.historyService.pushBill(bill);
       await this.init();
     }
   }

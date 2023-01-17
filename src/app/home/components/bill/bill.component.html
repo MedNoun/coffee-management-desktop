@@ -1,4 +1,9 @@
-<div id="content" #content>
+<ng-template #loaderTemplate>
+  <div class="container child flex wrap back center">
+    <app-loader class="loader"></app-loader>
+  </div>
+</ng-template>
+<ng-template id="content" #content>
   <div class="flex center column holder">
     <div class="title flex center column">
       <input
@@ -41,7 +46,7 @@
       </table>
     </div>
     <div class="container flex center column big">
-      <!-- <h2 class="container">{{ bill.user.firstName }}</h2> -->
+      <h2 class="container">{{ user.firstName }}</h2>
       <input class="editable title" value="Thank you !" [readonly]="!admin" />
     </div>
     <div class="addition">
@@ -55,15 +60,19 @@
       </button>
     </div>
     <div class="flex space-between container">
-      <button mat-mini-fab class="back">
+      <button mat-mini-fab class="back" (click)="previous()">
         <mat-icon class="pointer">navigate_before</mat-icon>
       </button>
       <button mat-mini-fab color="warn">
         <mat-icon class="pointer">arrow_drop_down</mat-icon>
       </button>
-      <button mat-mini-fab class="forward">
+      <button mat-mini-fab class="forward" (click)="next()">
         <mat-icon class="pointer">navigate_next</mat-icon>
       </button>
     </div>
   </div>
-</div>
+</ng-template>
+
+<ng-container
+  *ngTemplateOutlet="isLoading ? loaderTemplate : content"
+></ng-container>
