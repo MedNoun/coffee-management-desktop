@@ -26,7 +26,14 @@ export class SubCardComponent implements OnInit {
   delete() {
     this.productService.removeProduct(this.product.id);
   }
+  async onFileChange(event, id) {
+    console.log('event : ', event.target.files[0]);
 
+    const response = await this.productService.changeProductPicture(
+      event.target.files[0],
+      id
+    );
+  }
   commandThisArticle(nameOfProduct: string) {}
   sendDataToParent(event?) {}
   cancelCommandOfThisArticle(nameOfProduct: string) {}

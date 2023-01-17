@@ -22,10 +22,10 @@ export class CardComponent implements OnInit {
     this.productService.currentCategory = this.category.id;
   }
 
-  async onFileChanged(event, id) {
+  async onFileChange(event, id) {
     console.log('event : ', event.target.files[0]);
 
-    const response = await this.productService.changePicture(
+    const response = await this.productService.changeCategoryPicture(
       event.target.files[0],
       id
     );
