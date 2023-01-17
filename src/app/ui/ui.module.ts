@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserModule } from '@angular/platform-browser';
@@ -13,6 +12,7 @@ import {
   IgxRadioModule,
   IgxRippleModule,
 } from 'igniteui-angular';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 @NgModule({
   declarations: [],
@@ -28,6 +28,7 @@ import {
     IgxCardModule,
     IgxRippleModule,
     IgxRadioModule,
+
     //browser modules
     BrowserModule,
     BrowserAnimationsModule,
