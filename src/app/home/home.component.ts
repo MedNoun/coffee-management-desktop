@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Bill, Category } from '../../assets';
+import { Category } from '../../assets';
 import { BillService, ProductService } from '../core/services';
 import { UserService } from '../core/services/user/user.service';
 import { CategoryDto, ProductDto } from '../shared/models';
