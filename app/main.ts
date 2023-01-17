@@ -169,14 +169,39 @@ ipcMain.on('set', async (event, key, value) => {
   store.set(key, value);
 });
 
-ipcMain.handle('clear', async (event) => {
-  return await store.clear();
+ipcMain.on('clear', async (event) => {
+  store.clear();
 });
 
-ipcMain.handle('delete', async (event, key) => {
-  return await store.delete(key);
+ipcMain.on('delete', async (event, key) => {
+  store.delete(key);
 });
 
-ipcMain.handle('has', async (event, key) => {
-  return await store.has(key);
+ipcMain.handle('has', (event, key) => {
+  return store.has(key);
 });
+
+ipcMain.handle(
+  'copyFile',
+  (event, fileName: string, src: string, relativeDestination: string) => {
+    const randomName =
+      String(Math.floor(Math.random() * 100000)) + '_' + fileName;
+    const destination: string = path.join(
+      app.getAppPath(),
+      'src',
+      'assets',
+      relativeDestination,
+      randomName
+    );
+    fs.copyFile(src, path.join(destination), (e) => e);
+    return path.join(
+      '..',
+      '..',
+      '..',
+      '..',
+      'assets',
+      relativeDestination,
+      randomName
+    );
+  }
+);

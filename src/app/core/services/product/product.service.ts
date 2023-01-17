@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { Category, Product, Role } from '../../../../assets';
 import { CategoryDto, ProductDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
@@ -10,6 +11,7 @@ import { StoreService } from '../store/store.service';
 export class ProductService implements OnInit {
   private _category: number;
   private _categories: Category[] = [];
+  private mainSubject: Subject<Category[]> = new Subject<Category[]>();
 
   // this new is just for adding a fake id to the forms to add will be later remove in the persist method
   private newId: number = 0;
@@ -38,14 +40,14 @@ export class ProductService implements OnInit {
     this.categories = [];
   }
   public async find() {
-    this._categories = await this.storeService.find(Category.name, {
+    this.categories = await this.storeService.find(Category.name, {
       relations: {
         products: true,
       },
     });
     this.currentCategory = this.categories.length ? this.categories[0].id : -1;
 
-    return this._categories;
+    return this.categories;
   }
   private async create(
     category: Partial<CategoryDto> & Pick<CategoryDto, 'name' | 'products'>
@@ -91,7 +93,29 @@ export class ProductService implements OnInit {
     const removed = this.category.products.splice(index, 1);
   }
 
+  //changing product picture functionality
+  public async changePicture(file: any, id: number) {
+    const fileName: string = id + '.' + file.name.split('.').at(-1);
+    this.storeService
+      .copyFile(fileName, file.path, 'icons')
+      .then((newPath: string) => {
+        const old = this.category.image;
+        this.category.image = newPath;
+        for (let product of this.category.products) {
+          if (product.image === old) {
+            product.image = newPath;
+          }
+        }
+        this.mainSubject.next(this.categories);
+      })
+      .catch((e) => {
+        //catch error
+      });
+  }
   //getters + setters
+  public get observable() {
+    return this.mainSubject.asObservable();
+  }
   public get currentCategory() {
     return this._category;
   }
@@ -103,14 +127,17 @@ export class ProductService implements OnInit {
       (category) => category.id === this.currentCategory
     );
   }
+
   private get id() {
     this.newId -= 1;
     return this.newId;
   }
   public set currentCategory(id: number) {
     this._category = id;
+    this.mainSubject.next(this._categories);
   }
   private set categories(cat) {
     this._categories = cat;
+    this.mainSubject.next(this._categories);
   }
 }

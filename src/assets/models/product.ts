@@ -20,8 +20,6 @@ export class Product extends BaseEntity {
   price: number;
   @Column()
   unit: string;
-  @ManyToOne(() => Category, (category) => category.products, {
-    nullable: false,
-  })
+  @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 }
