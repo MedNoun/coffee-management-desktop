@@ -21,7 +21,7 @@ export class StoreService {
     return await window.api.invoke('update', name, id, object, params);
   }
   public async remove(name: string, object, params: any = {}) {
-    return await window.api.send('remove', name, object, params);
+    return await window.api.invoke('remove', name, object, params);
   }
   // electron store operations for local storage
   public async set(key: string, value: any) {

@@ -23,6 +23,8 @@ export class AuthComponent implements OnInit {
     this.userService.observable.subscribe((v) => {
       this.router.navigateByUrl('home');
     });
+    this.userService.init();
+
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],

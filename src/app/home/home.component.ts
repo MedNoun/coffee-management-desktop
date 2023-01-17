@@ -57,6 +57,9 @@ export class HomeComponent implements OnInit {
       'success'
     );
   }
+  public logout() {
+    this.userService.logout();
+  }
   // getters setters
   get categories() {
     return this._categories;

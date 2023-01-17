@@ -33,6 +33,8 @@ export class ProductService implements OnInit {
       }
       await this.storeService.save(Category.name, el);
     }
+    console.log(this.toDelete);
+
     for (let cat of this.toDelete) {
       await this.storeService.remove(Category.name, cat);
     }

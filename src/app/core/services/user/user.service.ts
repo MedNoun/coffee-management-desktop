@@ -1,4 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { Role, User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
@@ -15,8 +16,13 @@ export class UserService {
 
   constructor(
     private readonly storeService: StoreService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {}
+  public init() {
+    this.currentUser = undefined;
+    this.admin = false;
+  }
   public async login(payload: Partial<User>) {
     this.authService
       .login(payload)
@@ -27,6 +33,9 @@ export class UserService {
       .catch((e) => {
         console.log('error:userService:login: ', e);
       });
+  }
+  public logout() {
+    this.router.navigateByUrl('auth');
   }
   //Crud Operations for User
   public async readAll() {

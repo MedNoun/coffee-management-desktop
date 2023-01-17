@@ -17,11 +17,9 @@ export class AuthService {
   ) {}
   private readonly apiUrl: string = 'http://localhost:3000';
   private async localLogin(user: Partial<User>) {
-    const identifier = Object.create(user);
-    delete identifier.password;
     const requested: User = await this.storeService.findOneBy(
       'User',
-      identifier
+      {username : user.username}
     );
     console.log(requested, user);
 
