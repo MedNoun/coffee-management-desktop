@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../../../assets';
+import { Role, User } from '../../../../assets';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { StoreService } from '../store/store.service';
 import { throwError } from 'rxjs';
 import * as bcrypt from 'bcryptjs';
@@ -12,32 +12,56 @@ import * as bcrypt from 'bcryptjs';
 export class AuthService {
   constructor(
     private readonly storeService: StoreService,
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly jwtHelper: JwtHelperService
   ) {}
-  private readonly apiUrl: string;
-  async register() {}
-  async localLogin(user: Partial<User>) {
+  private readonly apiUrl: string = 'http://localhost:3000';
+  private async localLogin(user: Partial<User>) {
     const identifier = Object.create(user);
     delete identifier.password;
     const requested: User = await this.storeService.findOneBy(
       'User',
       identifier
     );
+
     if (requested) {
-      user.password = bcrypt.hashSync(user.password, requested.salt);
-      if (user.password === requested.password) {
+      const hashed = bcrypt.hashSync(user.password, requested.salt);
+      if (hashed === requested.password) {
         return requested;
       }
     }
-    throwError(() => {
-      new Error('Login Failed : False Credentials');
-    });
+    // handle not found error
   }
-  async remoteLogin(user: Partial<User>) {
-    return await this.http
-      .post<any>(`${this.apiUrl}/login`, user)
-      .pipe(tap((response) => console.log(response)));
+  private async remoteLogin(user: Partial<User>) {
+    return await this.http.post<any>(`${this.apiUrl}/user/login`, user);
   }
-
-  async logout() {}
+  // private getTokenPayload(token) {
+  //   return this.jwtHelper.decodeToken(token);
+  // }
+  async login(user: Partial<User>) {
+    const _user: User = await this.localLogin(user);
+    if (_user) {
+      if (_user.role === Role.admin) {
+        const token = await this.storeService.get(_user.username);
+        if (token && !this.jwtHelper.isTokenExpired(token)) {
+          return _user;
+        } else {
+          this.remoteLogin(user)
+            .then((ob) => {
+              ob.subscribe((r) => {
+                this.storeService.set(_user.username, r.access_token);
+              });
+            })
+            .catch((e) => {
+              // handle internet connexion and not found error
+              return e;
+            });
+        }
+      } else {
+        return _user;
+      }
+    } else {
+      // handle not found error
+    }
+  }
 }

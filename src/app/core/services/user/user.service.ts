@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
-import { User } from '../../../../assets';
+import { Observable, Subject } from 'rxjs';
+import { Role, User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
 import { AuthService } from './auth.service';
 
@@ -7,26 +8,38 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class UserService {
-  private _admin: boolean;
+  private _admin: boolean = false;
   private _currentUser: User;
   private _users: User[] = [];
+  private mainSubject: Subject<User> = new Subject<User>();
 
   constructor(
     private readonly storeService: StoreService,
     private readonly authService: AuthService
-  ) {
-    this.admin = true;
-  }
-  //login operations
-  public async login(user: Partial<User>) {
-    try {
-      this.currentUser = await this.authService.localLogin(user);
-    } catch {}
+  ) {}
+  public async login(payload: Partial<User>) {
+    this.authService
+      .login(payload)
+      .then((user) => {
+        this.currentUser = user;
+        this.admin = this.currentUser.role === Role.admin;
+      })
+      .catch((e) => {
+        console.log('error:userService:login: ', e);
+      });
   }
   //Crud Operations for User
   public async readAll() {
-    this._users = await this.storeService.find(User.name);
-    console.log(this._users);
+    this._users = await this.storeService.find(User.name, {
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+      },
+    });
   }
   public async readOne(
     user: Partial<User> &
@@ -55,6 +68,9 @@ export class UserService {
   get admin() {
     return this._admin;
   }
+  get observable() {
+    return this.mainSubject.asObservable();
+  }
   get users() {
     return this._users;
   }
@@ -67,6 +83,7 @@ export class UserService {
     this._admin = v;
   }
   private set currentUser(user: User) {
+    this.mainSubject.next(this.currentUser);
     this._currentUser = user;
   }
 }

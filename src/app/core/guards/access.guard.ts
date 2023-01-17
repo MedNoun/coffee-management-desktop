@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
+  Router,
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
@@ -12,7 +13,10 @@ import { UserService } from '../services';
   providedIn: 'root',
 })
 export class AccessGuard implements CanActivate {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly router: Router
+  ) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -21,6 +25,11 @@ export class AccessGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.userService.currentUser != undefined;
+    if (this.userService.currentUser === undefined) {
+      this.router.navigateByUrl('auth');
+      return false;
+    } else {
+      return true;
+    }
   }
 }

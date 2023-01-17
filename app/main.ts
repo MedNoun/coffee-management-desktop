@@ -2,10 +2,12 @@ import { app, BrowserWindow, ipcMain, screen } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
+import * as Store from 'electron-store';
 
 import { DataSource, Repository } from 'typeorm';
 import { Bill, Category, Product, Purchase, User } from '../src/assets/';
 
+const store = new Store();
 let win: BrowserWindow = null;
 const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');
@@ -157,4 +159,24 @@ ipcMain.handle('update', async (event, name, id, object, params) => {
 
 ipcMain.handle('remove', async (event, name, object, params) => {
   return await repositories.get(name).softRemove(object);
+});
+
+ipcMain.handle('get', async (event, key) => {
+  return await store.get(key);
+});
+
+ipcMain.on('set', async (event, key, value) => {
+  store.set(key, value);
+});
+
+ipcMain.handle('clear', async (event) => {
+  return await store.clear();
+});
+
+ipcMain.handle('delete', async (event, key) => {
+  return await store.delete(key);
+});
+
+ipcMain.handle('has', async (event, key) => {
+  return await store.has(key);
 });

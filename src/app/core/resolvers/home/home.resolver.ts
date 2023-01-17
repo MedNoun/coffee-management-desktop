@@ -6,9 +6,8 @@ import {
   ActivatedRouteSnapshot,
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { Category } from '../../../../../assets';
-import { BillService } from '../../bill/bill.service';
-import { ProductService } from '../../product/product.service';
+import { Category } from '../../../../assets';
+import { BillService, ProductService } from '../../services';
 
 @Injectable({
   providedIn: 'root',
