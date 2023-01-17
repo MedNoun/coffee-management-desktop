@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>

@@ -5,9 +5,10 @@ import { SharedModule } from '../shared/shared.module';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { BillComponent } from './components/bill/bill.component';
 import { UiModule } from '../ui/ui.module';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
-  declarations: [HomeComponent, BillComponent],
+  declarations: [HomeComponent, BillComponent, DashboardComponent],
   imports: [
     SharedModule,
     HomeRoutingModule,

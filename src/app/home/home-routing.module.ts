@@ -4,6 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { HomeResolver } from '../core/resolvers/home/home.resolver';
 import { AccessGuard } from '../core/guards/access.guard';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminGuard } from '../core/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -13,6 +15,14 @@ const routes: Routes = [
     resolve: {
       categories: HomeResolver,
     },
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [AdminGuard],
+        children: [],
+      },
+    ],
   },
 ];
 
