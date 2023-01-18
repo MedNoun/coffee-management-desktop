@@ -8,17 +8,7 @@ import { WebviewDirective } from './directives/';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent } from './components/card/card.component';
 import { SubCardComponent } from './components/sub-card/sub-card.component';
-import {
-  IgxButtonModule,
-  IgxIconModule,
-  IgxCardModule,
-  IgxRippleModule,
-  IgxRadioModule,
-} from 'igniteui-angular';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
+
 import { LoaderComponent } from './components/loader/loader.component';
 import { UiModule } from '../ui/ui.module';
 

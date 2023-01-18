@@ -1,7 +1,4 @@
 @import "../../styles.scss";
-.fatherof3 {
-  align-items: stretch;
-}
 .child {
   background-color: $col_blue1;
   border-radius: 10px;
@@ -10,10 +7,11 @@
   width: 25vw;
 }
 .child:nth-child(2) {
-  width: 50vw;
+  min-width: 40vw;
+  max-width: 43vw;
 }
 .child:nth-child(3) {
-  width: 25vw;
+  min-width: 25vw;
 }
 .heading {
   color: $col_white;

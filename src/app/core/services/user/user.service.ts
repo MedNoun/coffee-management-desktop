@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import Swal from 'sweetalert2';
 import { Role, User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
 import { AuthService } from './auth.service';
@@ -24,14 +25,16 @@ export class UserService {
     this.admin = false;
   }
   public async login(payload: Partial<User>) {
-    this.authService
+    return this.authService
       .login(payload)
       .then((user) => {
-        this.currentUser = user;
-        this.admin = this.currentUser.role === Role.admin;
+        if (user) {
+          this.currentUser = user;
+          this.admin = this.currentUser.role === Role.admin;
+        }
       })
       .catch((e) => {
-        console.log('error:userService:login: ', e);
+        Swal.fire('Login Failed', e.message, 'error');
       });
   }
   public logout() {

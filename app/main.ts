@@ -161,6 +161,14 @@ ipcMain.handle('remove', async (event, name, object, params) => {
   return await repositories.get(name).softRemove(object);
 });
 
+ipcMain.handle('stats', async (event, name, startDate, finishDate) => {
+  return await repositories
+    .get(name)
+    .createQueryBuilder()
+    .select('product,SUM(quantity)', 'quantity')
+    .groupBy('productId');
+});
+
 ipcMain.handle('get', async (event, key) => {
   return await store.get(key);
 });
@@ -193,7 +201,7 @@ ipcMain.handle(
       relativeDestination,
       randomName
     );
-    fs.copyFile(src, path.join(destination), (e) => e);
+    fs.copyFile(src, destination, (e) => e);
     return path.join(
       '..',
       '..',

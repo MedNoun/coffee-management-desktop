@@ -3,8 +3,10 @@ import { Role, User } from '../../../../assets';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { StoreService } from '../store/store.service';
-import { throwError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import * as bcrypt from 'bcryptjs';
+import { ApiService } from '../api/api.service';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -13,56 +15,48 @@ export class AuthService {
   constructor(
     private readonly storeService: StoreService,
     private readonly http: HttpClient,
-    private readonly jwtHelper: JwtHelperService
+    private readonly jwtHelper: JwtHelperService,
+    private readonly apiService: ApiService
   ) {}
-  private readonly apiUrl: string = 'http://localhost:3000';
   private async localLogin(user: Partial<User>) {
-    const requested: User = await this.storeService.findOneBy(
-      'User',
-      {username : user.username}
-    );
-    console.log(requested, user);
+    const requested: User = await this.storeService.findOneBy('User', {
+      username: user.username,
+    });
 
     if (requested) {
       const hashed = bcrypt.hashSync(user.password, requested.salt);
-
       if (hashed === requested.password) {
         return requested;
       }
     }
-    // handle not found error
   }
-  private async remoteLogin(user: Partial<User>) {
-    return await this.http.post<any>(`${this.apiUrl}/user/login`, user);
-  }
+
   // private getTokenPayload(token) {
   //   return this.jwtHelper.decodeToken(token);
   // }
   async login(user: Partial<User>) {
     const _user: User = await this.localLogin(user);
-
     if (_user) {
+      this.storeService.delete(_user.username);
       if (_user.role === Role.admin) {
-        const token = await this.storeService.get(_user.username);
-        if (token && !this.jwtHelper.isTokenExpired(token)) {
+        const token: string = await this.storeService.get(_user.username);
+
+        if (token !== undefined && !this.jwtHelper.isTokenExpired(token)) {
           return _user;
         } else {
-          this.remoteLogin(user)
-            .then((ob) => {
-              ob.subscribe((r) => {
-                this.storeService.set(_user.username, r.access_token);
-              });
-            })
-            .catch((e) => {
-              // handle internet connexion and not found error
-              return e;
-            });
+          this.apiService.post('user/login', user).subscribe({
+            next: (v) => {
+              return _user;
+            },
+            error: (e) => Swal.fire('Login Failed', e.message, 'error'),
+            complete: () => console.info('complete'),
+          });
         }
       } else {
         return _user;
       }
     } else {
-      // handle not found error
+      throw new Error('False Credentials');
     }
   }
 }
