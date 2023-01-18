@@ -42,4 +42,7 @@ export class StoreService {
   public async copyFile(name: string, path: string, relativeDest: string = '') {
     return await window.api.invoke('copyFile', name, path, relativeDest);
   }
+  public async getStats() {
+    return await window.api.invoke('stats', 'purchase');
+  }
 }

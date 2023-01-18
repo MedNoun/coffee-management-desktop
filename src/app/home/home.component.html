@@ -56,7 +56,7 @@
   </div>
   <input class="heading editable" value="Management" [readonly]="!admin" />
 
-  <div class="container flex fatherof3">
+  <div class="container flex fatherof3 wrap">
     <ng-container
       *ngTemplateOutlet="isLoading ? loaderTemplate : cardsTemplate"
     ></ng-container>
@@ -97,7 +97,7 @@
     </div>
     <div *ngIf="admin">
       <button mat-flat-button>
-        <p class="pointer">Dashbord</p>
+        <a class="pointer" [routerLink]="['/dashboard']">Dashbord</a>
       </button>
     </div>
     <div *ngIf="admin">

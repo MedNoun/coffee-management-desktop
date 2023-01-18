@@ -19,10 +19,18 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
+        pathMatch: 'full',
         canActivate: [AdminGuard],
         children: [],
       },
     ],
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    pathMatch: 'full',
+    canActivate: [AdminGuard],
+    children: [],
   },
 ];
 

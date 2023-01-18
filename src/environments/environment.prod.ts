@@ -1,4 +1,5 @@
 export const APP_CONFIG = {
   production: true,
-  environment: 'PROD'
+  environment: 'PROD',
+  api_url: 'http://localhost:3000/',
 };

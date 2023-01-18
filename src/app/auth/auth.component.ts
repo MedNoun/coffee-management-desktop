@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../core/services';
+import Swal from 'sweetalert2';
 import { UserService } from '../core/services/user/user.service';
 
 @Component({
@@ -36,7 +37,7 @@ export class AuthComponent implements OnInit {
         username: this.loginForm.get('username').value,
         password: this.loginForm.get('password').value,
       };
-      await this.userService.login(payload);
+      this.userService.login(payload);
     }
   }
 

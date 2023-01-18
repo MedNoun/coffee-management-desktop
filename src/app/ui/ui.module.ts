@@ -8,7 +8,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import {
   IgxButtonModule,
   IgxCardModule,
+  IgxDateRangePickerModule,
   IgxIconModule,
+  IgxInputGroupModule,
   IgxRadioModule,
   IgxRippleModule,
 } from 'igniteui-angular';
@@ -27,7 +29,24 @@ import {
     IgxCardModule,
     IgxRippleModule,
     IgxRadioModule,
-
+    IgxDateRangePickerModule,
+    IgxInputGroupModule,
+    //angular material
+    MatIconModule,
+    MatButtonModule,
+    MatInputModule,
+    MatRadioModule,
+    //igniteUI
+    IgxButtonModule,
+    IgxIconModule,
+    IgxCardModule,
+    IgxRippleModule,
+    IgxRadioModule,
+    IgxDateRangePickerModule,
+    IgxInputGroupModule,
+    //browser modules
+    BrowserModule,
+    BrowserAnimationsModule,
     //browser modules
     BrowserModule,
     BrowserAnimationsModule,
@@ -44,6 +63,8 @@ import {
     IgxCardModule,
     IgxRippleModule,
     IgxRadioModule,
+    IgxDateRangePickerModule,
+    IgxInputGroupModule,
     //browser modules
     BrowserModule,
     BrowserAnimationsModule,
