@@ -31,7 +31,7 @@ export class AuthComponent implements OnInit {
       password: ['', Validators.required],
     });
   }
-  async onSubmit() {
+  onSubmit() {
     if (this.loginForm.valid) {
       const payload = {
         username: this.loginForm.get('username').value,

@@ -23,7 +23,7 @@ export class ApiService {
 
   put(path: string, body: Object = {}): Observable<any> {
     return this.http
-      .put(`${APP_CONFIG.api_url}${path}`, JSON.stringify(body))
+      .put(`${APP_CONFIG.api_url}${path}`, body)
       .pipe(catchError(this.formatErrors));
   }
 
@@ -33,7 +33,7 @@ export class ApiService {
     params = new HttpParams()
   ): Observable<any> {
     return this.http
-      .post(`${APP_CONFIG.api_url}${path}`, JSON.stringify(body), {
+      .post(`${APP_CONFIG.api_url}${path}`, body, {
         params,
       })
       .pipe(catchError(this.formatErrors));

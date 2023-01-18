@@ -25,17 +25,11 @@ export class UserService {
     this.admin = false;
   }
   public async login(payload: Partial<User>) {
-    return this.authService
-      .login(payload)
-      .then((user) => {
-        if (user) {
-          this.currentUser = user;
-          this.admin = this.currentUser.role === Role.admin;
-        }
-      })
-      .catch((e) => {
-        Swal.fire('Login Failed', e.message, 'error');
-      });
+    const logged: User = await this.authService.login(payload);
+    if (logged) {
+      this.currentUser = logged;
+      this.admin = this.currentUser.role === Role.admin;
+    }
   }
   public logout() {
     this.router.navigateByUrl('auth');
