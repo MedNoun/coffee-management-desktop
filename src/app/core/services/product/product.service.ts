@@ -16,16 +16,24 @@ export class ProductService implements OnInit {
   // this new is just for adding a fake id to the forms to add will be later remove in the persist method
   private newId: number = 0;
   //contains the categories to delete
-  private toDelete: Category[] = [];
+  private categoriesToDelete: Category[] = [];
+  //contains products to delete
+  private productsToDelete: Product[] = [];
 
-  constructor(
-    private readonly storeService: StoreService,
-    private router: Router
-  ) {}
+  constructor(private readonly storeService: StoreService) {}
   ngOnInit(): void {}
 
   //database Logic
   public async persist() {
+    // delete categories
+    for (let cat of this.categoriesToDelete) {
+      await this.storeService.remove(Category.name, cat);
+    }
+    // delete Products
+    for (let prod of this.productsToDelete) {
+      await this.storeService.remove(Product.name, prod);
+    }
+    // Save changes and new elements
     for (let el of this.categories) {
       el.id < 0 && delete el.id;
       for (let pro of el.products) {
@@ -33,11 +41,8 @@ export class ProductService implements OnInit {
       }
       await this.storeService.save(Category.name, el);
     }
-
-    for (let cat of this.toDelete) {
-      await this.storeService.remove(Category.name, cat);
-    }
-    this.toDelete = [];
+    this.categoriesToDelete = [];
+    this.productsToDelete = [];
     this.categories = [];
   }
   public async find() {
@@ -70,7 +75,7 @@ export class ProductService implements OnInit {
   public removeCategory(id: number) {
     const index: number = this.categories.findIndex((item) => item.id === id);
     const removed: Category[] = this.categories.splice(index, 1);
-    this.toDelete = [...removed, ...this.toDelete];
+    this.categoriesToDelete = [...removed, ...this.categoriesToDelete];
     if (id === this.currentCategory) {
       this.currentCategory = this.categories.length
         ? this.categories[0].id
@@ -87,11 +92,13 @@ export class ProductService implements OnInit {
   public async addProduct(product: Product | ProductDto) {
     const _product = await this.storeService.create(Product.name, product);
     !_product.id && (_product.id = this.id);
+    _product.image = this.category.image;
     this.category.products.push(_product);
   }
   public removeProduct(id: number) {
     const index = this.category.products.findIndex((item) => item.id === id);
     const removed = this.category.products.splice(index, 1);
+    this.productsToDelete = [...removed, ...this.productsToDelete];
   }
 
   //changing product picture functionality
