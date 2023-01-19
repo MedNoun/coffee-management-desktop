@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { Category, Product } from '../../../../assets';
 import { BillService, ProductService } from '../../../core/services';
 import { UserService } from '../../../core/services/user/user.service';
@@ -8,20 +9,23 @@ import { UserService } from '../../../core/services/user/user.service';
   templateUrl: './sub-card.component.html',
   styleUrls: ['./sub-card.component.scss'],
 })
-export class SubCardComponent implements OnInit {
+export class SubCardComponent implements OnInit, OnDestroy {
   @Input('product') private _product: Product = new Product();
   private _admin: boolean;
+  private subscription: Subscription;
   constructor(
     private readonly userService: UserService,
     private readonly productService: ProductService,
     private readonly billService: BillService
   ) {}
   ngOnInit(): void {
-    this.userService.observable.subscribe((admin) => {
+    this.subscription = this.userService.observable.subscribe((admin) => {
       this._admin = admin;
     });
   }
-
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
   add() {
     this.billService.addProduct(this.product);
   }
@@ -32,12 +36,7 @@ export class SubCardComponent implements OnInit {
     this.productService.removeProduct(this.product.id);
   }
   async onFileChange(event, id) {
-    console.log('event : ', event.target.files[0]);
-
-    const response = await this.productService.changeProductPicture(
-      event.target.files[0],
-      id
-    );
+    await this.productService.changeProductPicture(event.target.files[0], id);
   }
   commandThisArticle(nameOfProduct: string) {}
   sendDataToParent(event?) {}

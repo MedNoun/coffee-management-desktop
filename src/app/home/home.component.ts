@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Bill, Category, Role, User } from '../../assets';
 import { BillService, ProductService } from '../core/services';
@@ -10,28 +11,41 @@ import { CategoryDto, ProductDto } from '../shared/models';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   private _categories: Category[];
   private _category: Category;
   private _bill: Bill;
   private _admin: boolean;
+  // destroyer to avoid memory leaks when component unmounts
+  private destroy$: Subject<void>;
   constructor(
     private readonly userService: UserService,
     private readonly productService: ProductService,
     private readonly billService: BillService
   ) {}
   ngOnInit(): void {
-    this.productService.observable.subscribe((categories) => {
-      this.categories = categories;
-      this.category = this.productService.category;
-    });
-    this.billService.observable.subscribe((bill) => {
-      this.bill = bill;
-    });
-    this.userService.observable.subscribe((admin) => {
-      this.admin = admin;
-    });
+    this.destroy$ = new Subject<void>();
+    this.productService.observable
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((categories) => {
+        this.categories = categories;
+        this.category = this.productService.category;
+      });
+    this.billService.observable
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((bill) => {
+        this.bill = bill;
+      });
+    this.userService.observable
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((admin) => {
+        this.admin = admin;
+      });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   // admin handlers functions
   public async saveChanges() {
