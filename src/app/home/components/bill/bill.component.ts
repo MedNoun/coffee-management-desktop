@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Bill, Product } from '../../../../assets';
 import { BillService } from '../../../core/services';
 import { UserService } from '../../../core/services/user/user.service';
@@ -8,20 +9,23 @@ import { UserService } from '../../../core/services/user/user.service';
   templateUrl: './bill.component.html',
   styleUrls: ['./bill.component.scss'],
 })
-export class BillComponent implements OnInit {
+export class BillComponent implements OnInit, OnDestroy {
   @Input('bill') private _currentBill: Bill;
   public isLoading: boolean = false;
   private _admin: boolean;
+  private subscription: Subscription;
   constructor(
     private readonly userService: UserService,
     private readonly billService: BillService
   ) {}
   ngOnInit(): void {
-    this.userService.observable.subscribe((admin) => {
+    this.subscription = this.userService.observable.subscribe((admin) => {
       this.admin = admin;
     });
   }
-
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
   print() {
     throw new Error('Method not implemented.');
   }
