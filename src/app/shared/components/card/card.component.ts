@@ -42,7 +42,7 @@ export class CardComponent implements OnInit {
 
   // getters :
   get admin() {
-    return this.admin;
+    return this._admin;
   }
   get category() {
     return this._category;

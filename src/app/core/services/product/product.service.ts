@@ -93,7 +93,7 @@ export class ProductService implements OnInit {
 
   //Product logic
   public async addProduct(product: Product | ProductDto) {
-    const _product = await this.storeService.create(Product.name, product);
+    const _product : Product = await this.storeService.create(Product.name, product);
     !_product.id && (_product.id = this.id);
     _product.image = this.category.image;
     this.category.products.push(_product);

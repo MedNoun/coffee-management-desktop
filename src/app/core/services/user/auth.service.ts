@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Role, User } from '../../../../assets';
-import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { StoreService } from '../store/store.service';
-import {
-  catchError,
-  lastValueFrom,
-  Observable,
-  Subject,
-  throwError,
-} from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import * as bcrypt from 'bcryptjs';
 import { ApiService } from '../api/api.service';
 import Swal from 'sweetalert2';
@@ -20,7 +13,6 @@ import Swal from 'sweetalert2';
 export class AuthService {
   constructor(
     private readonly storeService: StoreService,
-    private readonly http: HttpClient,
     private readonly jwtHelper: JwtHelperService,
     private readonly apiService: ApiService
   ) {}
@@ -62,8 +54,6 @@ export class AuthService {
   public async login(user: Partial<User>) {
     try {
       const _user: User = await this.localLogin(user);
-      console.log('trying to log;::', _user);
-
       if (!_user) {
         throw new Error('Invalid Credentials');
       }
@@ -81,7 +71,6 @@ export class AuthService {
         throw new Error('Error logging to distant server');
       }
       this.storeService.set(_user.username, logged.access_token);
-
       return _user;
     } catch (e) {
       Swal.fire(
