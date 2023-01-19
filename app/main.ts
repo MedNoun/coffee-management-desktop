@@ -3,10 +3,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
 import * as Store from 'electron-store';
-
 import { DataSource, Repository } from 'typeorm';
 import { Bill, Category, Product, Purchase, User } from '../src/assets/';
-
 const store = new Store();
 let win: BrowserWindow = null;
 const args = process.argv.slice(1);

@@ -47,11 +47,21 @@ import {
     //browser modules
     BrowserModule,
     BrowserAnimationsModule,
-    //browser modules
-    BrowserModule,
-    BrowserAnimationsModule,
   ],
   exports: [
+    //angular material
+    MatIconModule,
+    MatButtonModule,
+    MatInputModule,
+    MatRadioModule,
+    //igniteUI
+    IgxButtonModule,
+    IgxIconModule,
+    IgxCardModule,
+    IgxRippleModule,
+    IgxRadioModule,
+    IgxDateRangePickerModule,
+    IgxInputGroupModule,
     //angular material
     MatIconModule,
     MatButtonModule,
