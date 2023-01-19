@@ -44,11 +44,6 @@
     </div>
   </div>
 </ng-template>
-<ng-template #billTemplate>
-  <div class="container child flex center">
-    <app-bill [bill]="bill"></app-bill>
-  </div>
-</ng-template>
 
 <div class="flex column father">
   <div class="container">
@@ -63,24 +58,16 @@
     <ng-container
       *ngTemplateOutlet="isLoading ? loaderTemplate : subCardsTemplate"
     ></ng-container>
-    <ng-container *ngTemplateOutlet="billTemplate"></ng-container>
+    <div class="container child flex center">
+      <app-bill [bill]="bill"></app-bill>
+    </div>
   </div>
   <div class="container flex space-around wrap footer">
     <div>
-      <button
-        #error
-        class="unvisible"
-        [swal]="[
-          'Command en cours!',
-          'Terminer la commande en cours svp',
-          'warning'
-        ]"
-      ></button>
       <button mat-flat-button color="primary" (click)="reset()">
         <p class="pointer">Reset</p>
       </button>
     </div>
-
     <button
       mat-flat-button
       color="primary"
@@ -95,7 +82,7 @@
         <p class="pointer">Save Changes</p>
       </button>
     </div>
-    <div *ngIf="admin">
+    <!-- <div *ngIf="admin">
       <button mat-flat-button>
         <a class="pointer" [routerLink]="['/dashboard']">Dashbord</a>
       </button>
@@ -104,6 +91,6 @@
       <button mat-flat-button>
         <p class="pointer">changer mot de passe</p>
       </button>
-    </div>
+    </div> -->
   </div>
 </div>
