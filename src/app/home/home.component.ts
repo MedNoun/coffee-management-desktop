@@ -18,8 +18,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly userService: UserService,
     private readonly productService: ProductService,
-    private readonly billService: BillService,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly billService: BillService
   ) {
     this._categories = this.productService.categories;
     this._category = this.productService.category;

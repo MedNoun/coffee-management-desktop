@@ -1,28 +1,36 @@
 import { Injectable } from '@angular/core';
 import { StoreService } from '../store/store.service';
 import { Bill } from '../../../../assets';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HistoryService {
-  private limit: number = 0;
-  private offset: number = 0;
-  private _bills: Bill[] = [];
-  private currentBill: number = -1;
+  private limit: number;
+  private offset: number;
+  private _bills: Bill[];
+  private currentBill: number;
 
-  constructor(private readonly storeService: StoreService) {}
+  constructor(
+    private readonly storeService: StoreService,
+    private readonly userService: UserService
+  ) {}
   public init() {
     this.currentBill = -1;
+    this.bills = [];
+    this.limit = 0;
+    this.offset = 0;
   }
   public async populate() {
     if (this.bills.length === this.limit) {
       this.offset = this.limit;
       this.limit += 10;
       const ancientBills: Bill[] = await this.storeService.find(Bill.name, {
+        where: { user: this.userService.currentUser },
         relations: ['purchases', 'purchases.product'],
-        limit: this.limit,
-        offset: this.offset,
+        take: this.limit,
+        skip: this.offset,
         withDeleted: true,
       });
       this.bills = [...this.bills, ...ancientBills];
