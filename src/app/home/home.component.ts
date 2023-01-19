@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Category } from '../../assets';
 import { BillService, ProductService } from '../core/services';
@@ -17,7 +18,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly userService: UserService,
     private readonly productService: ProductService,
-    private readonly billService: BillService
+    private readonly billService: BillService,
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this._categories = this.productService.categories;
     this._category = this.productService.category;
@@ -38,12 +40,10 @@ export class HomeComponent implements OnInit {
     });
   }
   public async addProduct() {
-    const product = new ProductDto();
-    await this.productService.addProduct(product);
+    await this.productService.addProduct(new ProductDto());
   }
   public async addCategory() {
-    const category = new CategoryDto();
-    await this.productService.addCategory(category);
+    await this.productService.addCategory(new CategoryDto());
   }
   // Command functions
   public async reset() {
@@ -56,9 +56,6 @@ export class HomeComponent implements OnInit {
       'Your command was launched successfully !',
       'success'
     );
-  }
-  public logout() {
-    this.userService.logout();
   }
   // getters setters
   get categories() {

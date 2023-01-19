@@ -25,19 +25,45 @@ export class AuthService {
     private readonly apiService: ApiService
   ) {}
   private async localLogin(user: Partial<User>) {
-    const requested: User = await this.storeService.findOneBy('User', {
-      username: user.username,
-    });
-    if (requested) {
-      const hashed = bcrypt.hashSync(user.password, requested.salt);
-      if (hashed === requested.password) {
-        return requested;
+    const hash: User = await this.storeService.findOneBy(
+      'User',
+      {
+        username: user.username,
+      },
+      {
+        select: {
+          password: true,
+          salt: true,
+        },
+      }
+    );
+    if (hash) {
+      const hashed = bcrypt.hashSync(user.password, hash.salt);
+      if (hashed === hash.password) {
+        const _user: User = (
+          await this.storeService.find('User', {
+            where: {
+              username: user.username,
+            },
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              role: true,
+            },
+          })
+        )[0];
+        return _user;
       }
     }
   }
   public async login(user: Partial<User>) {
     try {
-      const _user = await this.localLogin(user);
+      const _user: User = await this.localLogin(user);
+      console.log('trying to log;::', _user);
+
       if (!_user) {
         throw new Error('Invalid Credentials');
       }
@@ -55,6 +81,7 @@ export class AuthService {
         throw new Error('Error logging to distant server');
       }
       this.storeService.set(_user.username, logged.access_token);
+
       return _user;
     } catch (e) {
       Swal.fire(
@@ -64,8 +91,4 @@ export class AuthService {
       );
     }
   }
-
-  // private getTokenPayload(token) {
-  //   return this.jwtHelper.decodeToken(token);
-  // }
 }

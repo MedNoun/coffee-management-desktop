@@ -13,6 +13,7 @@ import { UserService } from '../../services/user/user.service';
 export class LoginResolver implements Resolve<any> {
   constructor(private readonly userService: UserService) {}
   async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    
     return await this.userService.readAll();
   }
 }
