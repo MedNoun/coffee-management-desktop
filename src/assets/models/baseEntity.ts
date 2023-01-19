@@ -11,7 +11,7 @@ export class BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
   @DeleteDateColumn()
   deletedAt: Date | null;
   @Column({ default: false })

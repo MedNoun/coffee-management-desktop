@@ -1,7 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { Category, Product, Role } from '../../../../assets';
+import { ReplaySubject } from 'rxjs';
+import { Category, Product } from '../../../../assets';
 import { CategoryDto, ProductDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
 
@@ -11,7 +10,10 @@ import { StoreService } from '../store/store.service';
 export class ProductService implements OnInit {
   private _category: number;
   private _categories: Category[] = [];
-  private mainSubject: Subject<Category[]> = new Subject<Category[]>();
+  // used replay subject so that any new mounting components recives the last value emited
+  private mainSubject: ReplaySubject<Category[]> = new ReplaySubject<
+    Category[]
+  >(1);
 
   // this new is just for adding a fake id to the forms to add will be later remove in the persist method
   private newId: number = 0;
@@ -44,6 +46,7 @@ export class ProductService implements OnInit {
     this.categoriesToDelete = [];
     this.productsToDelete = [];
     this.categories = [];
+    await this.find();
   }
   public async find() {
     this.categories = await this.storeService.find(Category.name, {

@@ -10,11 +10,16 @@ import { UserService } from '../../../core/services/user/user.service';
 })
 export class CardComponent implements OnInit {
   @Input('category') private _category: Category = new Category();
+  private _admin: boolean;
   constructor(
     private readonly productService: ProductService,
     private readonly userService: UserService
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userService.observable.subscribe((admin) => {
+      this._admin = admin;
+    });
+  }
   delete() {
     this.productService.removeCategory(this.category.id);
   }
@@ -37,7 +42,7 @@ export class CardComponent implements OnInit {
 
   // getters :
   get admin() {
-    return this.userService.admin;
+    return this.admin;
   }
   get category() {
     return this._category;
