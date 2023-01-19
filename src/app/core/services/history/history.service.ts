@@ -28,11 +28,16 @@ export class HistoryService {
       this.limit += 10;
       const ancientBills: Bill[] = await this.storeService.find(Bill.name, {
         where: { user: this.userService.currentUser },
+        order: {
+          createdAt: 'DESC',
+        },
         relations: ['purchases', 'purchases.product'],
         take: this.limit,
         skip: this.offset,
         withDeleted: true,
       });
+      console.log('bills : ', ancientBills);
+
       this.bills = [...this.bills, ...ancientBills];
       return true;
     }
@@ -67,7 +72,7 @@ export class HistoryService {
   }
   private set bills(items: Bill[]) {
     this._bills = items.sort(
-      (a, b) => b.createAt.getTime() - a.createAt.getTime()
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
   }
 }

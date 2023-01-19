@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReplaySubject } from 'rxjs';
 import { Role, User } from '../../../../assets';
 import { StoreService } from '../store/store.service';
 import { AuthService } from './auth.service';
@@ -11,6 +12,7 @@ export class UserService {
   private _admin: boolean = false;
   private _currentUser: User;
   private _users: User[] = [];
+  private mainSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
   constructor(
     private readonly storeService: StoreService,
     private readonly authService: AuthService,
@@ -64,10 +66,12 @@ export class UserService {
   }
 
   //getters
-  get admin() {
+  get observable() {
+    return this.mainSubject.asObservable();
+  }
+  private get admin() {
     return this._admin;
   }
-
   get users() {
     return this._users;
   }
@@ -78,6 +82,7 @@ export class UserService {
   //setters
   private set admin(v: boolean) {
     this._admin = v;
+    this.mainSubject.next(v);
   }
   private set currentUser(user: User) {
     this._currentUser = user;

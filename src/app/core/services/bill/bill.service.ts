@@ -4,13 +4,17 @@ import { Bill, Product, Purchase, User } from '../../../../assets';
 import { BillDto, PurchaseDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
 import { UserService } from '../user/user.service';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BillService {
+  // displayed bill
   private _bill: Bill;
+  // last active bill (containing the new items)
   private _currentBill: Bill;
+  private mainSubject: ReplaySubject<Bill> = new ReplaySubject<Bill>(1);
   constructor(
     private readonly historyService: HistoryService,
     private readonly storeService: StoreService,
@@ -18,7 +22,7 @@ export class BillService {
   ) {}
   public async init() {
     this.bill = await this.storeService.create(Bill.name, new BillDto());
-    this._currentBill = this.bill;
+    this.currentBill = this.bill;
     this.historyService.init();
   }
   public async closeBill() {
@@ -73,13 +77,17 @@ export class BillService {
     return removed;
   }
   // getters & setters
-  get bill() {
+  get observable() {
+    return this.mainSubject.asObservable();
+  }
+  private get bill() {
     return this._bill;
   }
   private set bill(bill: Bill) {
     this._bill = bill;
+    this.mainSubject.next(this.bill);
   }
-  get currentBill() {
+  private get currentBill() {
     return this._currentBill;
   }
   private set currentBill(bill) {

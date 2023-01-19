@@ -5,8 +5,6 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { Category } from '../../../../assets';
 import { BillService, ProductService } from '../../services';
 
 @Injectable({
