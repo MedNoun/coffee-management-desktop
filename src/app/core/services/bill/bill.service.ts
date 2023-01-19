@@ -3,6 +3,7 @@ import { HistoryService } from '../history/history.service';
 import { Bill, Product, Purchase, User } from '../../../../assets';
 import { BillDto, PurchaseDto } from '../../../shared/models';
 import { StoreService } from '../store/store.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,8 @@ export class BillService {
   private _currentBill: Bill;
   constructor(
     private readonly historyService: HistoryService,
-    private readonly storeService: StoreService
+    private readonly storeService: StoreService,
+    private readonly userService: UserService
   ) {}
   public async init() {
     this.bill = await this.storeService.create(Bill.name, new BillDto());
@@ -21,16 +23,13 @@ export class BillService {
   }
   public async closeBill() {
     if (this.bill.purchases.length) {
-      const user: User = await this.storeService.create(
-        User.name,
-        this.bill.user
-      );
+      const user: User = this.userService.currentUser;
       const bill: Bill = await this.storeService.save(Bill.name, {
         ...this.bill,
         user,
       });
       this.historyService.pushBill(bill);
-      await this.init();
+      this.init();
     }
   }
   public async previous() {
@@ -73,7 +72,7 @@ export class BillService {
     const removed = this.bill.purchases.splice(index, 1);
     return removed;
   }
-  // getters
+  // getters & setters
   get bill() {
     return this._bill;
   }
@@ -83,7 +82,7 @@ export class BillService {
   get currentBill() {
     return this._currentBill;
   }
-  set currentBill(bill) {
+  private set currentBill(bill) {
     this._currentBill = bill;
   }
 }

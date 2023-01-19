@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AuthService } from '../core/services';
-import Swal from 'sweetalert2';
 import { UserService } from '../core/services/user/user.service';
 
 @Component({
@@ -15,17 +11,12 @@ export class AuthComponent implements OnInit {
   public loginForm: FormGroup;
 
   constructor(
-    private router: Router,
     private formBuilder: FormBuilder,
     private readonly userService: UserService
   ) {}
 
   ngOnInit() {
-    this.userService.observable.subscribe((v) => {
-      this.router.navigateByUrl('home');
-    });
     this.userService.init();
-
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -40,7 +31,6 @@ export class AuthComponent implements OnInit {
       this.userService.login(payload);
     }
   }
-
   get users() {
     return this.userService.users;
   }
