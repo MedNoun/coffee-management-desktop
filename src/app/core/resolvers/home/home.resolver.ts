@@ -25,7 +25,7 @@ export class HomeResolver implements Resolve<any> {
         console.log('Error Home Resolver : ', e);
         return false;
       });
-    const billInit = await this.billService.init();
-    return { productInit, billInit };
+    await this.billService.init();
+    return { productInit };
   }
 }

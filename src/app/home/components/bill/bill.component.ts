@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Bill, Product } from '../../../../assets';
-import { BillService, HistoryService } from '../../../core/services';
+import { BillService } from '../../../core/services';
 import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
@@ -13,8 +13,7 @@ export class BillComponent implements OnInit {
   public isLoading: boolean = false;
   constructor(
     private readonly userService: UserService,
-    private readonly billService: BillService,
-    private readonly historyService: HistoryService
+    private readonly billService: BillService
   ) {}
   ngOnInit(): void {}
 
