@@ -54,7 +54,7 @@ Here is a preview of the application running in local :
 https://user-images.githubusercontent.com/54535672/220906733-3874f7ae-b7cc-4bb1-a590-d2ee46a39b91.mp4
 
 
-## Shout out to [Maxime Gris](https://github.com/maximegris/angular-electron) for his easy to use boiler plate for an angular electron project
+## Shout out to [Maxime Gris](https://github.com/maximegris/angular-electron) for his easy to use boilerplate for an angular electron project
 
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license]: https://github.com/maximegris/angular-electron/blob/main/LICENSE.md
