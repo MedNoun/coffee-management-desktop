@@ -21,37 +21,20 @@ export class AuthService {
       'User',
       {
         username: user.username,
-      },
-      {
-        select: {
-          password: true,
-          salt: true,
-        },
       }
     );
+    
     if (hash) {
-      const hashed = bcrypt.hashSync(user.password, hash.salt);
+      
+      const hashed = bcrypt.hashSync(user.password,hash.salt);
+      
       if (hashed === hash.password) {
-        const _user: User = (
-          await this.storeService.find('User', {
-            where: {
-              username: user.username,
-            },
-            select: {
-              id: true,
-              username: true,
-              email: true,
-              firstName: true,
-              lastName: true,
-              role: true,
-            },
-          })
-        )[0];
-        return _user;
+        const {password,salt,..._user} = hash
+        return _user as User;
       }
     }
   }
-  public async login(user: Partial<User>) {
+  public async login(user: Partial<User>, remoteRestriction : boolean = false) {
     try {
       const _user: User = await this.localLogin(user);
       if (!_user) {
@@ -60,17 +43,19 @@ export class AuthService {
       if (_user.role !== Role.admin) {
         return _user;
       }
-      const token = await this.storeService.get(_user.username);
-      if (token && !this.jwtHelper.isTokenExpired(token)) {
-        return _user;
+      if(remoteRestriction){
+        const token = await this.storeService.get(_user.username);
+        if (token && !this.jwtHelper.isTokenExpired(token)) {
+          return _user;
+        }
+        const logged = await lastValueFrom(
+          this.apiService.post('user/login', user)
+        );
+        if (!logged) {
+          throw new Error('Error logging to distant server');
+        }
+        this.storeService.set(_user.username, logged.access_token);
       }
-      const logged = await lastValueFrom(
-        this.apiService.post('user/login', user)
-      );
-      if (!logged) {
-        throw new Error('Error logging to distant server');
-      }
-      this.storeService.set(_user.username, logged.access_token);
       return _user;
     } catch (e) {
       Swal.fire(

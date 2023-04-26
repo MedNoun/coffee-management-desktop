@@ -27,13 +27,19 @@ export class BillService {
   }
   public async closeBill() {
     if (this.bill.purchases.length) {
-      const user: User = this.userService.currentUser;
-      const bill: Bill = await this.storeService.save(Bill.name, {
-        ...this.bill,
-        user,
-      });
-      this.historyService.pushBill(bill);
-      this.init();
+      if(this._currentBill === this._bill){
+        const user: User = this.userService.currentUser;
+        const bill: Bill = await this.storeService.save(Bill.name, {
+          ...this.bill,
+          user,
+        });
+        this.historyService.pushBill(bill);
+        this.init();
+      }else{
+        // update bill 
+        // TODO
+      }
+      
     }
   }
   public async previous() {

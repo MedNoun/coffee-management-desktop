@@ -26,8 +26,10 @@ export class HistoryService {
     if (this.bills.length === this.limit) {
       this.offset = this.limit;
       this.limit += 10;
+      console.log(this.userService.currentUser);
+      
       const ancientBills: Bill[] = await this.storeService.find(Bill.name, {
-        where: { user: this.userService.currentUser },
+        where: { user: {id :this.userService.currentUser.id} },
         order: {
           createdAt: 'DESC',
         },
@@ -36,8 +38,9 @@ export class HistoryService {
         skip: this.offset,
         withDeleted: true,
       });
-      console.log('bills : ', ancientBills);
-
+      
+      console.log("bills: ",ancientBills);
+      
       this.bills = [...this.bills, ...ancientBills];
       return true;
     }

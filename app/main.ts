@@ -11,26 +11,29 @@ const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');
 
 //database Items
-const db_path = path.join(
+const dbPath = path.join(
   app.getPath('appData'),
   app.getName(),
   'databases',
-  'Database.sqlite'
 );
+const filePath = path.join(dbPath,"Database.sqlite")
 const entities = [Category, Product, User, Bill, Purchase];
 const repositories = new Map<string, Repository<any>>();
-const db: DataSource = db_init(db_path);
+const db: DataSource = db_init(dbPath);
 
-function db_init(db_path): DataSource {
-  if (!fs.existsSync(db_path)) {
-    fs.writeFileSync(db_path, '');
+function db_init(dbPath): DataSource {
+  if (!fs.existsSync(dbPath)) {
+    fs.mkdirSync(dbPath);
+  }
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath,"")
   }
   const db = new DataSource({
     type: 'sqlite',
     synchronize: true,
     logging: true,
     logger: 'simple-console',
-    database: db_path,
+    database: filePath,
     entities: entities,
   });
 
